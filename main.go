@@ -6,7 +6,6 @@ import (
 	"gitlab.com/CTeillet/pc3r-projet/connexion"
 	"gitlab.com/CTeillet/pc3r-projet/match"
 	"gitlab.com/CTeillet/pc3r-projet/user"
-	"log"
 	"net/http"
 	"os"
 )
@@ -83,7 +82,7 @@ func handleCoins(w http.ResponseWriter, r *http.Request) {
 func handleHome(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
-	log.Fatal(w.Write([]byte(`{"message":"hello world!"}`)))
+	_, _ = w.Write([]byte(`{"message":"hello world!"}`))
 
 }
 
@@ -91,7 +90,7 @@ func main() {
 	port := os.Getenv("PORT")
 
 	if port == "" {
-		log.Fatal("$PORT must be set")
+		port = "8080"
 	}
 
 	http.HandleFunc("/", handleHome)
@@ -100,6 +99,6 @@ func main() {
 	http.HandleFunc("/match", handleMatch)
 	http.HandleFunc("/connexion", handleConnexion)
 	http.HandleFunc("/coins", handleCoins)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	_ = http.ListenAndServe(":"+port, nil)
 
 }
