@@ -5,6 +5,7 @@ import (
 	"gitlab.com/CTeillet/pc3r-projet/coins"
 	"gitlab.com/CTeillet/pc3r-projet/connexion"
 	"gitlab.com/CTeillet/pc3r-projet/match"
+	"gitlab.com/CTeillet/pc3r-projet/message"
 	"gitlab.com/CTeillet/pc3r-projet/user"
 	"net/http"
 	"os"
@@ -33,7 +34,7 @@ func handleUser(w http.ResponseWriter, r *http.Request) {
 	case "DELETE":
 		user.DeleteUser(w, r)
 	default:
-
+		handleProblem(w, r)
 	}
 }
 
@@ -46,7 +47,7 @@ func handleBet(w http.ResponseWriter, r *http.Request) {
 	case "DELETE":
 		bet.DeleteBet(w, r)
 	default:
-
+		handleProblem(w, r)
 	}
 }
 
@@ -55,7 +56,7 @@ func handleMatch(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		match.GetMatch(w, r)
 	default:
-
+		handleProblem(w, r)
 	}
 }
 
@@ -66,7 +67,7 @@ func handleConnexion(w http.ResponseWriter, r *http.Request) {
 	case "DELETE":
 		connexion.Disconnect(w, r)
 	default:
-
+		handleProblem(w, r)
 	}
 }
 
@@ -75,7 +76,18 @@ func handleCoins(w http.ResponseWriter, r *http.Request) {
 	case "POST":
 		coins.Generate(w, r)
 	default:
+		handleProblem(w, r)
+	}
+}
 
+func handleMessage(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "GET":
+		message.GetMessage(w, r)
+	case "POST":
+		message.PostMessage(w, r)
+	case "DELETE":
+		message.DeleteMessage(w, r)
 	}
 }
 
@@ -83,7 +95,12 @@ func handleHome(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write([]byte(`{"message":"hello world!"}`))
+}
 
+func handleProblem(w http.ResponseWriter, _ *http.Request) {
+	w.WriteHeader(http.StatusNotFound)
+	w.Header().Set("Content-Type", "application/json")
+	_, _ = w.Write([]byte(`{"message":"problem"}`))
 }
 
 func main() {
@@ -99,6 +116,7 @@ func main() {
 	http.HandleFunc("/match", handleMatch)
 	http.HandleFunc("/connexion", handleConnexion)
 	http.HandleFunc("/coins", handleCoins)
+	http.HandleFunc("/messsage", handleMessage)
 	_ = http.ListenAndServe(":"+port, nil)
 
 }
