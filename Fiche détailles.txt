@@ -1,0 +1,80 @@
+Cas d'utilisation
+
+- Pierre se connecte. Une page d'acceuil lui sugère des paris.
+  Il en choisit un, les caractéristiques du paris (date, cotes, les equipes, ...)
+  Il choisit l'équipe ainsi que la somme de G-Coins à miser.
+  UN écran lui demandant s'il est sûr s'affiche.
+  Il appuie sur oui, et un message de confirmation s'affiche.
+
+- Bob se connecte et arrive sur la page d'acceuil.
+  Il y a une colonne montrant les matchs sur lesquels il a parier.
+  Il clique sur l'un des paris, un écran s'affiche montrant les caractéristiques du paris
+  ainsi que le montant parier et l'équipe.
+
+- Alice arrive sur la page de connexion, elle choisit l'option pour s'inscrire.
+  Elle rentre son nom, son mail, un mot de passe, un pseudo et clique sur valider.
+  Un écran s'affiche lui disant que son compte a été créé.
+
+- Paul se connecte et arrive sur la page d'acceuil.
+  Il clique sur un paris dans la colonne avec les match sur lesquels il a parié.
+  Il peut le supprime.
+  Un message de confirmation s'affiche, il clique sur OUI.
+  Un message de validation s'affiche
+
+- Jacques se connecte et arrive sur la page d'acceceuil.
+  Il rentre le nom d'une équipe dans le champ de recherche et les paris disponibles s'affiche.
+  Il choisit l'équipe ainsi que la somme de G-Coins à miser.
+  UN écran lui demandant s'il est sûr s'affiche.
+  Il appuie sur oui, et un message de confirmation s'affiche.
+
+- Michel se connecte pour la première fois de la journée.
+  Un message s'affiche lui disant qu'il a obtenu une résompense quotidienne de G-Coins.
+  Il clique sur le bouton et obtient un montant aléatoiree de G-coins en plus dans son inventaire.
+
+- Juliette se connecte.
+   Elle choisit l'option paramètres utilisateurs.
+   Elle clique sur le bouton supprimmer compte.
+   Une fenetre s'affiche lui demandant de confirmer en rentrant son mot de passe.
+   Elle rentre son mot de passe et appuie sur valider.
+
+- Anne se connecte.
+  Elle clique sur un match disponible.
+  La conversation du paris s'affiche.
+  Elle rentre un message pour réagir à la conversation.
+
+Fonctionnalités
+- compte utilisateur
+- recherche de paris disponibles
+- parier sur un match
+- laisser un message sous un match
+- récupérer sa récompense quotidienne
+
+Protocole
+
+- Utilisateur
+Get id -> obtenir utilisateur
+POST .. ... . .. . -> creer un utilisateur
+PUT .... .. .. . . -> modifier un utilisateur
+DELETE .. . .. . . -> supprimmer un utilisateur
+
+-Connexion
+POST login motDePasse -> connexion
+DELETE login          -> deconnexion
+
+-Paris
+GET idUtilisateur -> obtenir la liste des paris pour un utilisateur
+GET idPari        -> obtenir le pari
+POST idMatch idEquipe montant -> ajouter un pari
+DELETE idPari           -> supprimer un pari
+
+-Match
+GET           -> obtenir la liste de tous les matchs
+GET nomJeux   -> obtenir la liste de tous les matchs sur le jeux
+GET nomLigues -> obtenir la liste de tous les matchs sur la ligue
+GET nomEquipe -> obtenir la liste de tous les matchs de l'equipe
+GET date      -> obtenir la liste de tous les matchs se deroulant à la date
+GET nomJeux nomLigues nomEquipe date -> Obtenir la liste des paris avec l'equipe sur jeux sur la ligue à la date
+
+- G-coins
+GET idUtilisateur  -> obtenir le nombre de G-coins de l'utilisateur
+POST idUtilisateur -> obtenir récompense quotidienne
