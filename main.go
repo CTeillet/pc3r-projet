@@ -8,6 +8,7 @@ import (
 	"gitlab.com/CTeillet/pc3r-projet/user"
 	"log"
 	"net/http"
+	"os"
 )
 
 //type Personne struct {
@@ -87,12 +88,18 @@ func handleHome(w http.ResponseWriter, _ *http.Request) {
 }
 
 func main() {
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
 	http.HandleFunc("/", handleHome)
 	http.HandleFunc("/user", handleUser)
 	http.HandleFunc("/bet", handleBet)
 	http.HandleFunc("/match", handleMatch)
 	http.HandleFunc("/connexion", handleConnexion)
 	http.HandleFunc("/coins", handleCoins)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 
 }
