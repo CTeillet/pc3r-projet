@@ -78,3 +78,12 @@ GET nomJeux nomLigues nomEquipe date -> Obtenir la liste des paris avec l'equipe
 - G-coins
 GET idUtilisateur  -> obtenir le nombre de G-coins de l'utilisateur
 POST idUtilisateur -> obtenir récompense quotidienne
+
+-Message
+Get idPari -> obtenir la liste des messages sur un pari
+POST idPari idUtilisateur message -> poster le message sur la pari par l'utilisateur.
+DELETE idMessage idUtilisateur -> permet de détruire le message posté par l'utilisateur.
+
+Base de données
+MySQL -> match, paris, connexion, utilisateur
+MongoDB -> messsage
