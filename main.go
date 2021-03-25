@@ -7,6 +7,7 @@ import (
 	"gitlab.com/CTeillet/pc3r-projet/match"
 	"gitlab.com/CTeillet/pc3r-projet/message"
 	"gitlab.com/CTeillet/pc3r-projet/user"
+	"log"
 	"net/http"
 	"os"
 )
@@ -117,6 +118,6 @@ func main() {
 	http.HandleFunc("/connexion", handleConnexion)
 	http.HandleFunc("/coins", handleCoins)
 	http.HandleFunc("/messsage", handleMessage)
-	_ = http.ListenAndServe(":"+port, nil)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 
 }
