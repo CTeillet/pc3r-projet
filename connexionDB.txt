@@ -1,4 +1,7 @@
 Pour se connecter à MongoDB :
+Base de données : pc3r-projet
+Collection : message
+
   import "go.mongodb.org/mongo-driver/mongo"
   ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
   defer cancel()

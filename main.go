@@ -10,19 +10,37 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
-//type Personne struct {
-//
-//}
-//
-//type Pari struct {
-//
-//}
-//
-//type Match struct {
-//
-//}
+type User struct {
+	id       int
+	login    string
+	password string
+	mail     string
+}
+
+type Bet struct {
+	id             int
+	idMatch        int
+	equipeGagnante string
+	cote           float32
+	montant        int
+}
+
+type Match struct {
+	id      int
+	equipeA string
+	equipeB string
+	cote    float32
+}
+
+type Connexion struct {
+	id        int
+	login     string
+	idSession string
+	date      time.Time
+}
 
 func handleUser(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
