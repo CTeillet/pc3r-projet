@@ -10,39 +10,10 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
-type User struct {
-	id       int
-	login    string
-	password string
-	mail     string
-}
-
-type Bet struct {
-	id             int
-	idMatch        int
-	equipeGagnante string
-	cote           float32
-	montant        int
-}
-
-type Match struct {
-	id      int
-	equipeA string
-	equipeB string
-	cote    float32
-}
-
-type Connexion struct {
-	id        int
-	login     string
-	idSession string
-	date      time.Time
-}
-
 func handleUser(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
 	switch r.Method {
 	case "GET":
 		user.GetUser(w, r)
@@ -58,6 +29,7 @@ func handleUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleBet(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
 	switch r.Method {
 	case "GET":
 		bet.GetBet(w, r)
@@ -71,6 +43,7 @@ func handleBet(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleMatch(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
 	switch r.Method {
 	case "GET":
 		match.GetMatch(w, r)
@@ -80,6 +53,7 @@ func handleMatch(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleConnexion(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
 	switch r.Method {
 	case "POST":
 		connexion.Connect(w, r)
@@ -91,6 +65,7 @@ func handleConnexion(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleCoins(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
 	switch r.Method {
 	case "POST":
 		coins.Generate(w, r)
@@ -100,6 +75,7 @@ func handleCoins(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleMessage(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
 	switch r.Method {
 	case "GET":
 		message.GetMessage(w, r)
