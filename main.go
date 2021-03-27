@@ -7,13 +7,17 @@ import (
 	"gitlab.com/CTeillet/pc3r-projet/match"
 	"gitlab.com/CTeillet/pc3r-projet/message"
 	"gitlab.com/CTeillet/pc3r-projet/user"
+	"gitlab.com/CTeillet/pc3r-projet/utils"
 	"log"
 	"net/http"
 	"os"
 )
 
 func handleUser(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	err := r.ParseForm()
+	if err != nil {
+		handleProblem(w, r)
+	}
 	switch r.Method {
 	case "GET":
 		user.GetUser(w, r)
@@ -29,7 +33,10 @@ func handleUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleBet(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	err := r.ParseForm()
+	if err != nil {
+		handleProblem(w, r)
+	}
 	switch r.Method {
 	case "GET":
 		bet.GetBet(w, r)
@@ -43,7 +50,10 @@ func handleBet(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleMatch(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	err := r.ParseForm()
+	if err != nil {
+		handleProblem(w, r)
+	}
 	switch r.Method {
 	case "GET":
 		match.GetMatch(w, r)
@@ -53,7 +63,10 @@ func handleMatch(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleConnexion(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	err := r.ParseForm()
+	if err != nil {
+		handleProblem(w, r)
+	}
 	switch r.Method {
 	case "POST":
 		connexion.Connect(w, r)
@@ -65,7 +78,10 @@ func handleConnexion(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleCoins(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	err := r.ParseForm()
+	if err != nil {
+		handleProblem(w, r)
+	}
 	switch r.Method {
 	case "POST":
 		coins.Generate(w, r)
@@ -75,7 +91,10 @@ func handleCoins(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleMessage(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	err := r.ParseForm()
+	if err != nil {
+		handleProblem(w, r)
+	}
 	switch r.Method {
 	case "GET":
 		message.GetMessage(w, r)
@@ -87,15 +106,11 @@ func handleMessage(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleHome(w http.ResponseWriter, _ *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	_, _ = w.Write([]byte(`{"message":"hello world!"}`))
+	utils.SendResponse(w, http.StatusOK, `{"message":"hello world!"}`)
 }
 
 func handleProblem(w http.ResponseWriter, _ *http.Request) {
-	w.WriteHeader(http.StatusNotFound)
-	w.Header().Set("Content-Type", "application/json")
-	_, _ = w.Write([]byte(`{"message":"problem"}`))
+	utils.SendResponse(w, http.StatusInternalServerError, `{"message":"problem"}`)
 }
 
 func main() {

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="@MongoDB Projet-pc3r" uuid="d38f6ca1-93f3-48eb-91c2-93c4f8852633">
+      <driver-ref>mongo</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
+      <jdbc-url>mongodb+srv://cluster0.gf71f.mongodb.net/pc3r-projet</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="@Mysql Projet-pc3r" uuid="f237546b-85e3-40df-a485-b0b1c8256263">
+      <driver-ref>mariadb</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mariadb://cteillet.ddns.net:3306/projet-pc3r</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+      <time-zone>Europe/Paris</time-zone>
+    </data-source>
+  </component>
+</project>
