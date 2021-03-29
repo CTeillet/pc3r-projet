@@ -45,3 +45,6 @@ func main() {
     defer db.Close()
 
 }
+
+Connexion API sportsdata.io
+API Key LOL = c86e4989da6247358a15b0c3ab5dbe66

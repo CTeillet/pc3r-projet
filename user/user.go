@@ -3,8 +3,8 @@ package user
 import (
 	"gitlab.com/CTeillet/pc3r-projet/database"
 	"gitlab.com/CTeillet/pc3r-projet/utils"
-	"strconv"
 	"net/http"
+	"strconv"
 )
 
 type User struct {
@@ -14,9 +14,9 @@ type User struct {
 }
 
 func GetUser(res http.ResponseWriter, req *http.Request) {
-	//idSession := req.FormValue("idSession")
+	idSession := req.FormValue("idSession")
 	login := req.FormValue("login")
-	if true{//connexion.IsConnected(idSession) {
+	if utils.IsConnected(idSession) != "" {
 		var user *User = nil
 		searchUser(login, user)
 		if user != nil {
@@ -65,13 +65,13 @@ func existingLogin(login string) bool {
 	return false
 }
 
-func searchUser(login string, u *User)  {
+func searchUser(login string, u *User) {
 	db := database.Connect()
 	if db == nil {
 		return
 	}
-	
-	db.QueryRow("Select login, mail, cagnotte From User where login=?;", login).Scan(u.login, u.mail, u.cagnotte)
+
+	db.QueryRow("Select login, mail, cagnotte From Utilisateur where login=?;", login).Scan(u.login, u.mail, u.cagnotte)
 	db.Close()
 	return
 }
@@ -81,7 +81,7 @@ func insertUser(login string, password string, mail string) bool {
 	if db == nil {
 		return false
 	}
-	
+
 	res, err := db.Exec("INSERT INTO Utilisateur VALUES (?, ?, ?, 100);", login, password, mail)
 	db.Close()
 

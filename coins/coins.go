@@ -1,7 +1,6 @@
 package coins
 
 import (
-	"gitlab.com/CTeillet/pc3r-projet/connexion"
 	"gitlab.com/CTeillet/pc3r-projet/database"
 	"gitlab.com/CTeillet/pc3r-projet/utils"
 	"net/http"
@@ -11,7 +10,7 @@ func Generate(w http.ResponseWriter, r *http.Request) {
 	idSession := r.FormValue("idSession")
 	montant := r.FormValue("montant")
 
-	login := connexion.IsConnected(idSession)
+	login := utils.IsConnected(idSession)
 	if login != "" {
 		db := database.Connect()
 		if db == nil {

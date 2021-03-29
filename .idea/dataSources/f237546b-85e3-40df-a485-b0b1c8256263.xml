@@ -1064,101 +1064,138 @@
       <NotNull>1</NotNull>
       <DefaultExpression>current_timestamp()</DefaultExpression>
     </column>
-    <key id="339" parent="331" name="PRIMARY">
+    <index id="339" parent="331" name="FOREIGN_KEY_LOGIN">
+      <ColNames>login</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="340" parent="331" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="340" parent="332" name="id">
+    <foreign-key id="341" parent="331" name="FOREIGN_KEY_LOGIN">
+      <ColNames>login</ColNames>
+      <RefTableName>Utilisateur</RefTableName>
+      <RefColNames>login</RefColNames>
+    </foreign-key>
+    <column id="342" parent="332" name="id">
       <Position>1</Position>
       <DataType>int(5)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="341" parent="332" name="equipeA">
+    <column id="343" parent="332" name="sport">
       <Position>2</Position>
-      <DataType>varchar(15)|0s</DataType>
+      <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="342" parent="332" name="equipeB">
+    <column id="344" parent="332" name="region">
       <Position>3</Position>
+      <DataType>varchar(10)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="345" parent="332" name="equipeA">
+      <Position>4</Position>
       <DataType>varchar(15)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="343" parent="332" name="cote">
-      <Position>4</Position>
+    <column id="346" parent="332" name="equipeB">
+      <Position>5</Position>
+      <DataType>varchar(15)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="347" parent="332" name="cote">
+      <Position>6</Position>
       <DataType>float|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="344" parent="332" name="PRIMARY">
+    <column id="348" parent="332" name="statut">
+      <Position>7</Position>
+      <DataType>enum(&apos;open&apos;, &apos;ended&apos;, &apos;close&apos;)|0e</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="349" parent="332" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="345" parent="333" name="id">
+    <column id="350" parent="333" name="id">
       <Position>1</Position>
       <DataType>int(5)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="346" parent="333" name="idMatch">
+    <column id="351" parent="333" name="idMatch">
       <Position>2</Position>
       <DataType>int(5)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="347" parent="333" name="equipeGagnante">
+    <column id="352" parent="333" name="equipeGagnante">
       <Position>3</Position>
       <DataType>varchar(15)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="348" parent="333" name="cote">
+    <column id="353" parent="333" name="cote">
       <Position>4</Position>
       <DataType>float|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="349" parent="333" name="montant">
+    <column id="354" parent="333" name="montant">
       <Position>5</Position>
       <DataType>int(5)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="350" parent="333" name="SECONDARY_KEY_IDMATCH">
+    <column id="355" parent="333" name="login">
+      <Position>6</Position>
+      <DataType>varchar(10)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="356" parent="333" name="SECONDARY_KEY_IDMATCH">
       <ColNames>idMatch</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="351" parent="333" name="PRIMARY">
+    <index id="357" parent="333" name="SECONDARY_KEY_LOGIN">
+      <ColNames>login</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="358" parent="333" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="352" parent="333" name="SECONDARY_KEY_IDMATCH">
+    <foreign-key id="359" parent="333" name="SECONDARY_KEY_IDMATCH">
       <ColNames>idMatch</ColNames>
       <RefTableName>Match</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="353" parent="334" name="id">
+    <foreign-key id="360" parent="333" name="SECONDARY_KEY_LOGIN">
+      <ColNames>login</ColNames>
+      <RefTableName>Utilisateur</RefTableName>
+      <RefColNames>login</RefColNames>
+    </foreign-key>
+    <column id="361" parent="334" name="login">
       <Position>1</Position>
-      <DataType>int(5)|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
-    </column>
-    <column id="354" parent="334" name="login">
-      <Position>2</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="355" parent="334" name="password">
-      <Position>3</Position>
+    <column id="362" parent="334" name="password">
+      <Position>2</Position>
       <DataType>varchar(15)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="356" parent="334" name="mail">
-      <Position>4</Position>
-      <DataType>varchar(10)|0s</DataType>
+    <column id="363" parent="334" name="mail">
+      <Position>3</Position>
+      <DataType>varchar(30)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="357" parent="334" name="PRIMARY">
+    <column id="364" parent="334" name="cagnotte">
+      <Position>4</Position>
+      <DataType>int(5)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="365" parent="334" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
-      <ColNames>id</ColNames>
+      <ColNames>login</ColNames>
       <Primary>1</Primary>
     </key>
   </database-model>

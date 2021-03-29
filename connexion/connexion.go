@@ -6,15 +6,7 @@ import (
 	"gitlab.com/CTeillet/pc3r-projet/utils"
 	"math/rand"
 	"net/http"
-	"time"
 )
-
-type Connexion struct {
-	id        int
-	login     string
-	idSession string
-	date      time.Time
-}
 
 func Connect(w http.ResponseWriter, r *http.Request) {
 	login := r.FormValue("login")
@@ -35,8 +27,8 @@ func Connect(w http.ResponseWriter, r *http.Request) {
 func Disconnect(w http.ResponseWriter, r *http.Request) {
 	idSession := r.FormValue("idSession")
 
-	if IsConnected(idSession) != "" && idSession != "" {
-		if removeConnection(idSession) {
+	if utils.IsConnected(idSession) != "" && idSession != "" {
+		if utils.RemoveConnection(idSession) {
 			utils.SendResponse(w, http.StatusOK, `{"message":"user disconnected"}`)
 		} else {
 			utils.SendResponse(w, http.StatusInternalServerError, `{"message":"a problem appeared"}`)
@@ -44,54 +36,6 @@ func Disconnect(w http.ResponseWriter, r *http.Request) {
 	} else {
 		utils.SendResponse(w, http.StatusForbidden, `{"message":"user was not connected"}`)
 	}
-}
-
-func IsConnected(idSession string) string {
-	db := database.Connect()
-	if db == nil {
-		return ""
-	}
-	c := Connexion{}
-	err := db.QueryRow("Select * From Connexion where idSession=?;", idSession).Scan(&c.id, &c.login, &c.idSession, c.date)
-	if err != nil {
-		return ""
-	}
-	err = db.Close()
-	if err != nil {
-		return ""
-	}
-
-	t := time.Now()
-	comp := c.date.Add(15 * time.Minute)
-
-	if comp.After(t) {
-		majConnexion(idSession)
-		login := getLogin(idSession)
-		return login
-	} else {
-		removeConnection(idSession)
-		return ""
-	}
-
-}
-
-func getLogin(idSession string) string {
-	db := database.Connect()
-	if db == nil {
-		return ""
-	}
-	err := db.Close()
-	if err != nil {
-		return ""
-	}
-	login := ""
-
-	err = db.QueryRow("Select login From Connexion where idSession=?", idSession).Scan(&login)
-	if err != nil {
-		return ""
-	}
-
-	return login
 }
 
 func addConnexion(login string) string {
@@ -114,40 +58,6 @@ func addConnexion(login string) string {
 		return ""
 	} else {
 		return idSession
-	}
-}
-
-func removeConnection(idSession string) bool {
-	db := database.Connect()
-	if db == nil {
-		return false
-	}
-	res, err := db.Exec("Delete from Connexion where idSession=?;", idSession)
-	if err != nil {
-		return false
-	}
-	err = db.Close()
-	if err != nil {
-		return false
-	}
-
-	r, _ := res.RowsAffected()
-	if r == 0 {
-		return false
-	} else {
-		return true
-	}
-}
-
-func majConnexion(idSession string) {
-	db := database.Connect()
-	_, err := db.Exec("UPDATE Connexion set date=now() where idSession=?;", idSession)
-	if err != nil {
-		return
-	}
-	err = db.Close()
-	if err != nil {
-		return
 	}
 }
 

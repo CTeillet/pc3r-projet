@@ -2,7 +2,6 @@ package match
 
 import (
 	"encoding/json"
-	"gitlab.com/CTeillet/pc3r-projet/connexion"
 	"gitlab.com/CTeillet/pc3r-projet/database"
 	"gitlab.com/CTeillet/pc3r-projet/utils"
 	"net/http"
@@ -22,7 +21,7 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 	req := r.FormValue("login")
 	idSession := r.FormValue("idSession")
 
-	login := connexion.IsConnected(idSession)
+	login := utils.IsConnected(idSession)
 	if login != "" {
 		if req == "" {
 			db := database.Connect()
