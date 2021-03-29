@@ -80,9 +80,13 @@ func getLogin(idSession string) string {
 	if db == nil {
 		return ""
 	}
+	err := db.Close()
+	if err != nil {
+		return ""
+	}
 	login := ""
 
-	err := db.QueryRow("Select login From Connexion where idSession=?", idSession).Scan(&login)
+	err = db.QueryRow("Select login From Connexion where idSession=?", idSession).Scan(&login)
 	if err != nil {
 		return ""
 	}
