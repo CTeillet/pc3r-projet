@@ -52,8 +52,14 @@ func IsConnected(idSession string) bool {
 		return false
 	}
 	c := Connexion{}
-	db.QueryRow("Select * From Connexion where idSession=?;", idSession).Scan(&c.id, &c.login, &c.idSession, c.date)
-	db.Close()
+	err := db.QueryRow("Select * From Connexion where idSession=?;", idSession).Scan(&c.id, &c.login, &c.idSession, c.date)
+	if err != nil {
+		return false
+	}
+	err = db.Close()
+	if err != nil {
+		return false
+	}
 
 	t := time.Now()
 	comp := c.date.Add(15 * time.Minute)
@@ -75,10 +81,16 @@ func addConnexion(login string) string {
 	}
 	idSession := randSeq()
 	res, err := db.Exec("INSERT INTO Connexion (login, idSession) VALUES (?, ?);", login, idSession)
-	db.Close()
+	if err != nil {
+		return ""
+	}
+	err = db.Close()
+	if err != nil {
+		return ""
+	}
 
 	r, _ := res.RowsAffected()
-	if r == 0 || err != nil {
+	if r == 0 {
 		return ""
 	} else {
 		return idSession
@@ -90,11 +102,17 @@ func removeConnection(idSession string) bool {
 	if db == nil {
 		return false
 	}
-	res, err := db.Exec("Delete from Connexion where idSession=?", idSession)
-	db.Close()
+	res, err := db.Exec("Delete from Connexion where idSession=?;", idSession)
+	if err != nil {
+		return false
+	}
+	err = db.Close()
+	if err != nil {
+		return false
+	}
 
 	r, _ := res.RowsAffected()
-	if r == 0 || err != nil {
+	if r == 0 {
 		return false
 	} else {
 		return true
@@ -103,8 +121,14 @@ func removeConnection(idSession string) bool {
 
 func majConnexion(idSession string) {
 	db := database.Connect()
-	db.Exec("UPDATE Connexion set date=now() where idSession=?;\n", idSession)
-	db.Close()
+	_, err := db.Exec("UPDATE Connexion set date=now() where idSession=?;", idSession)
+	if err != nil {
+		return
+	}
+	err = db.Close()
+	if err != nil {
+		return
+	}
 }
 
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789")
