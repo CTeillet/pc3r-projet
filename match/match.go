@@ -22,7 +22,8 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 	req := r.FormValue("login")
 	idSession := r.FormValue("idSession")
 
-	if connexion.IsConnected(idSession) {
+	login := connexion.IsConnected(idSession)
+	if login != "" {
 		if req == "" {
 			db := database.Connect()
 			if db != nil {
