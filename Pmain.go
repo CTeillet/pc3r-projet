@@ -1,4 +1,4 @@
-package main
+package test
 
 import (
 	"gitlab.com/CTeillet/pc3r-projet/bet"

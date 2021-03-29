@@ -2,8 +2,10 @@ package match
 
 import (
 	"encoding/json"
+	"fmt"
 	"gitlab.com/CTeillet/pc3r-projet/database"
 	"gitlab.com/CTeillet/pc3r-projet/utils"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -91,4 +93,32 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 	} else {
 		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"`)
 	}
+}
+
+func UpdateMatch() {
+	//t := time.Now()
+	s := ""
+	//for i:=0; i<1 ; i++{
+	//	s+=t.Format("YYYY-MM-DD")
+	//	t = t.Add(24*time.Hour)
+	//	if i!= 0 {
+	//		s+=",%20"
+	//	}
+	//}
+	//s = t.Format("2006-01-02")
+	s = "2021-03-27"
+	fmt.Println(s)
+	fmt.Println("REQUESTEEE    " + "https://fly.sportsdata.io/v3/lol/scores/json/GamesByDate/" + s + "?key=c86e4989da6247358a15b0c3ab5dbe66")
+	resp, _ := http.Get("https://fly.sportsdata.io/v3/lol/scores/json/GamesByDate/" + s + "?key=c86e4989da6247358a15b0c3ab5dbe66")
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err.Error())
+	}
+	var data interface{} // TopTracks
+	err = json.Unmarshal(body, &data)
+	if err != nil {
+		panic(err.Error())
+	}
+	fmt.Printf("Results: %v\n", data)
 }
