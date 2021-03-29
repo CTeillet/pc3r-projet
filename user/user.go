@@ -3,24 +3,26 @@ package user
 import (
 	"gitlab.com/CTeillet/pc3r-projet/database"
 	"gitlab.com/CTeillet/pc3r-projet/utils"
+	"strconv"
 	"net/http"
 )
 
 type User struct {
 	login    string
-	password string
 	mail     string
 	cagnotte int
 }
 
 func GetUser(res http.ResponseWriter, req *http.Request) {
-	idSession := req.FormValue("idSession")
-	login := res.FormValue("login")
-	if connexion.IsConnected(idSession) {
-		user := searchUser(login)
+	//idSession := req.FormValue("idSession")
+	login := req.FormValue("login")
+	if true{//connexion.IsConnected(idSession) {
+		var user *User = nil
+		searchUser(login, user)
 		if user != nil {
-			if user.login != nil {
-				utils.SendResponse(res, http.StatusOK, `{"message":"user found", "login":"`+user.login+`", "mail":"`+user.mail+`", "cagnotte":"`+user.cagnotte+`"}`)
+			if user.login != "" {
+				cagnotte := strconv.Itoa(user.cagnotte)
+				utils.SendResponse(res, http.StatusOK, `{"message":"user found", "login":"`+user.login+`", "mail":"`+user.mail+`", "cagnotte":"`+cagnotte+`"}`)
 			} else {
 				utils.SendResponse(res, http.StatusForbidden, `{"message":"problem login user don't exist"}`)
 			}
@@ -63,15 +65,15 @@ func existingLogin(login string) bool {
 	return false
 }
 
-func searchUser(login string) User {
+func searchUser(login string, u *User)  {
 	db := database.Connect()
 	if db == nil {
-		return nil
+		return
 	}
-	u := User{}
-	db.QueryRow("Select login, mail, cagnotte From User where login=?;", login).Scan(&.login, &u.mail, &u.cagnotte)
+	
+	db.QueryRow("Select login, mail, cagnotte From User where login=?;", login).Scan(u.login, u.mail, u.cagnotte)
 	db.Close()
-	return u
+	return
 }
 
 func insertUser(login string, password string, mail string) bool {
