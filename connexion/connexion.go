@@ -35,7 +35,7 @@ func Connect(w http.ResponseWriter, r *http.Request) {
 func Disconnect(w http.ResponseWriter, r *http.Request) {
 	idSession := r.FormValue("idSession")
 
-	if IsConnected(idSession) && idSession != "" {
+	if IsConnected(idSession) != "" && idSession != "" {
 		if removeConnection(idSession) {
 			utils.SendResponse(w, http.StatusOK, `{"message":"user disconnected"}`)
 		} else {
@@ -46,19 +46,19 @@ func Disconnect(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func IsConnected(idSession string) bool {
+func IsConnected(idSession string) string {
 	db := database.Connect()
 	if db == nil {
-		return false
+		return ""
 	}
 	c := Connexion{}
 	err := db.QueryRow("Select * From Connexion where idSession=?;", idSession).Scan(&c.id, &c.login, &c.idSession, c.date)
 	if err != nil {
-		return false
+		return ""
 	}
 	err = db.Close()
 	if err != nil {
-		return false
+		return ""
 	}
 
 	t := time.Now()
@@ -66,12 +66,28 @@ func IsConnected(idSession string) bool {
 
 	if comp.After(t) {
 		majConnexion(idSession)
-		return true
+		login := getLogin(idSession)
+		return login
 	} else {
 		removeConnection(idSession)
-		return false
+		return ""
 	}
 
+}
+
+func getLogin(idSession string) string {
+	db := database.Connect()
+	if db == nil {
+		return ""
+	}
+	login := ""
+
+	err := db.QueryRow("Select login From Connexion where idSession=?", idSession).Scan(&login)
+	if err != nil {
+		return ""
+	}
+
+	return login
 }
 
 func addConnexion(login string) string {
