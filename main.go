@@ -1,4 +1,4 @@
-package test
+package main
 
 import (
 	"gitlab.com/CTeillet/pc3r-projet/bet"
@@ -8,7 +8,6 @@ import (
 	"gitlab.com/CTeillet/pc3r-projet/message"
 	"gitlab.com/CTeillet/pc3r-projet/user"
 	"gitlab.com/CTeillet/pc3r-projet/utils"
-	"log"
 	"net/http"
 	"os"
 )
@@ -120,13 +119,16 @@ func main() {
 		port = "8080"
 	}
 
-	http.HandleFunc("/", handleHome)
-	http.HandleFunc("/user", handleUser)
-	http.HandleFunc("/bet", handleBet)
-	http.HandleFunc("/match", handleMatch)
-	http.HandleFunc("/connexion", handleConnexion)
-	http.HandleFunc("/coins", handleCoins)
-	http.HandleFunc("/messsage", handleMessage)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	match.UpdateMatchPast()
 
+	/*
+		http.HandleFunc("/", handleHome)
+		http.HandleFunc("/user", handleUser)
+		http.HandleFunc("/bet", handleBet)
+		http.HandleFunc("/match", handleMatch)
+		http.HandleFunc("/connexion", handleConnexion)
+		http.HandleFunc("/coins", handleCoins)
+		http.HandleFunc("/messsage", handleMessage)
+		log.Fatal(http.ListenAndServe(":"+port, nil))
+	*/
 }

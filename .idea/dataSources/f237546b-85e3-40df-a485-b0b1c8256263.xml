@@ -1089,7 +1089,7 @@
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="344" parent="332" name="region">
+    <column id="344" parent="332" name="league">
       <Position>3</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
@@ -1114,86 +1114,95 @@
       <DataType>enum(&apos;open&apos;, &apos;ended&apos;, &apos;close&apos;)|0e</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="349" parent="332" name="PRIMARY">
+    <column id="349" parent="332" name="vainqueur">
+      <Position>8</Position>
+      <DataType>enum(&apos;equipeA&apos;, &apos;equipeB&apos;)|0e</DataType>
+    </column>
+    <key id="350" parent="332" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="350" parent="333" name="id">
+    <column id="351" parent="333" name="id">
       <Position>1</Position>
       <DataType>int(5)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="351" parent="333" name="idMatch">
+    <column id="352" parent="333" name="idMatch">
       <Position>2</Position>
       <DataType>int(5)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="352" parent="333" name="equipeGagnante">
+    <column id="353" parent="333" name="equipeGagnante">
       <Position>3</Position>
       <DataType>varchar(15)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="353" parent="333" name="cote">
+    <column id="354" parent="333" name="cote">
       <Position>4</Position>
       <DataType>float|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="354" parent="333" name="montant">
+    <column id="355" parent="333" name="montant">
       <Position>5</Position>
       <DataType>int(5)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="355" parent="333" name="login">
+    <column id="356" parent="333" name="login">
       <Position>6</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="356" parent="333" name="SECONDARY_KEY_IDMATCH">
+    <column id="357" parent="333" name="resultat">
+      <Position>7</Position>
+      <DataType>enum(&apos;win&apos;, &apos;loose&apos;, &apos;coming&apos;)|0e</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="358" parent="333" name="SECONDARY_KEY_IDMATCH">
       <ColNames>idMatch</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="357" parent="333" name="SECONDARY_KEY_LOGIN">
+    <index id="359" parent="333" name="SECONDARY_KEY_LOGIN">
       <ColNames>login</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="358" parent="333" name="PRIMARY">
+    <key id="360" parent="333" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="359" parent="333" name="SECONDARY_KEY_IDMATCH">
+    <foreign-key id="361" parent="333" name="SECONDARY_KEY_IDMATCH">
       <ColNames>idMatch</ColNames>
       <RefTableName>Match</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <foreign-key id="360" parent="333" name="SECONDARY_KEY_LOGIN">
+    <foreign-key id="362" parent="333" name="SECONDARY_KEY_LOGIN">
       <ColNames>login</ColNames>
       <RefTableName>Utilisateur</RefTableName>
       <RefColNames>login</RefColNames>
     </foreign-key>
-    <column id="361" parent="334" name="login">
+    <column id="363" parent="334" name="login">
       <Position>1</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="362" parent="334" name="password">
+    <column id="364" parent="334" name="password">
       <Position>2</Position>
       <DataType>varchar(15)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="363" parent="334" name="mail">
+    <column id="365" parent="334" name="mail">
       <Position>3</Position>
       <DataType>varchar(30)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="364" parent="334" name="cagnotte">
+    <column id="366" parent="334" name="cagnotte">
       <Position>4</Position>
       <DataType>int(5)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="365" parent="334" name="PRIMARY">
+    <key id="367" parent="334" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>login</ColNames>
       <Primary>1</Primary>

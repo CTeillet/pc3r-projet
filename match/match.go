@@ -7,6 +7,7 @@ import (
 	"gitlab.com/CTeillet/pc3r-projet/utils"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 type Match struct {
@@ -95,30 +96,33 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func UpdateMatch() {
-	//t := time.Now()
-	s := ""
-	//for i:=0; i<1 ; i++{
-	//	s+=t.Format("YYYY-MM-DD")
-	//	t = t.Add(24*time.Hour)
-	//	if i!= 0 {
-	//		s+=",%20"
-	//	}
-	//}
-	//s = t.Format("2006-01-02")
-	s = "2021-03-27"
-	fmt.Println(s)
-	fmt.Println("REQUESTEEE    " + "https://fly.sportsdata.io/v3/lol/scores/json/GamesByDate/" + s + "?key=c86e4989da6247358a15b0c3ab5dbe66")
-	resp, _ := http.Get("https://fly.sportsdata.io/v3/lol/scores/json/GamesByDate/" + s + "?key=c86e4989da6247358a15b0c3ab5dbe66")
+func UpdateMatchPast() {
+
+	s := "https://api.pandascore.co/lol/matches/past?page[size]=100&token=4xg85-0CNl9sOdk-tyFooufCsE8qchuK478B5bUoAOV0j3cREdQ"
+	resp, _ := http.Get(s)
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		panic(err.Error())
 	}
-	var data interface{} // TopTracks
+	var data utils.MatchPastJSON // TopTracks
 	err = json.Unmarshal(body, &data)
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("Results: %v\n", data)
+	fmt.Println(len(data))
+	fmt.Println(resp.Header)
+	for _, v := range data {
+		addMatch(v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Winner.Acronym, v.BeginAt)
+	}
+
+}
+
+func addMatch(sport string, league string, equipeA string, equipeB string, winner string, date time.Time) {
+	db := database.Connect()
+	_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, 1.0, 'open', ?, ?);", sport, league, equipeA, equipeB, winner, date)
+	if err != nil {
+		panic(err.Error())
+	}
+	db.Close()
 }
