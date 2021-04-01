@@ -119,7 +119,7 @@ func main() {
 		port = "8080"
 	}
 
-	match.UpdateMatchPast()
+	match.LoadAllPastMatch()
 
 	/*
 		http.HandleFunc("/", handleHome)

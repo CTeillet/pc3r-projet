@@ -7,6 +7,9 @@ import (
 	"gitlab.com/CTeillet/pc3r-projet/utils"
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -96,31 +99,64 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func UpdateMatchPast() {
+func LoadAllPastMatch() {
+	req := "https://api.pandascore.co/lol/matches/past?token=4xg85-0CNl9sOdk-tyFooufCsE8qchuK478B5bUoAOV0j3cREdQ"
 
-	s := "https://api.pandascore.co/lol/matches/past?page[size]=100&token=4xg85-0CNl9sOdk-tyFooufCsE8qchuK478B5bUoAOV0j3cREdQ"
-	resp, _ := http.Get(s)
+	resp, _ := http.Get(req + "&page[size]=100")
+	JSONMatch2SQL(resp)
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic(err.Error())
+	test := resp.Header.Get("Link")
+	res := strings.Split(test, ",")
+	last := ""
+	for _, v := range res {
+		if strings.Contains(v, "last") {
+			last = strings.Split(v, ";")[0][2 : len(strings.Split(v, ";")[0])-1]
+		}
 	}
+
+	u, err := url.Parse(last)
+	if err != nil {
+		panic(err)
+	}
+
+	q, err := url.ParseQuery(u.RawQuery)
+	if err != nil {
+		panic(err)
+	}
+	max, err := strconv.Atoi(q.Get("page"))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(max)
+	for i := 2; i < max+1; i++ {
+		s := req + "&page[size]=100&page[number]=" + strconv.Itoa(i)
+		fmt.Println(s)
+		resp, _ := http.Get(s)
+		go JSONMatch2SQL(resp)
+	}
+}
+
+func JSONMatch2SQL(resp *http.Response) {
+	body, err := ioutil.ReadAll(resp.Body)
 	var data utils.MatchPastJSON // TopTracks
 	err = json.Unmarshal(body, &data)
 	if err != nil {
 		panic(err.Error())
 	}
 	fmt.Println(len(data))
-	fmt.Println(resp.Header)
+	addMulipleMatch(data)
+}
+
+func addMulipleMatch(data utils.MatchPastJSON) {
 	for _, v := range data {
+		fmt.Println(v.ID)
 		addMatch(v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Winner.Acronym, v.BeginAt)
 	}
-
 }
 
 func addMatch(sport string, league string, equipeA string, equipeB string, winner string, date time.Time) {
 	db := database.Connect()
-	_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, 1.0, 'open', ?, ?);", sport, league, equipeA, equipeB, winner, date)
+	_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, 1.0, 'ended', ?, ?);", sport, league, equipeA, equipeB, winner, date)
 	if err != nil {
 		panic(err.Error())
 	}

@@ -51,3 +51,8 @@ API Key LOL = c86e4989da6247358a15b0c3ab5dbe66
 
 Connexion API pandaScore.co
 API Key LOL = 4xg85-0CNl9sOdk-tyFooufCsE8qchuK478B5bUoAOV0j3cREdQ
+
+AWS
+password : mMnKETHzU7b7asFi
+endpoint : database-1.cdc5uuou6eov.eu-west-3.rds.amazonaws.com
+identifiant : database-1

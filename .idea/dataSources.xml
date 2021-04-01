@@ -16,5 +16,13 @@
       <working-dir>$ProjectFileDir$</working-dir>
       <time-zone>Europe/Paris</time-zone>
     </data-source>
+    <data-source source="LOCAL" name="@AWS Projet-pc3r" uuid="49c38795-cd54-43e4-ae0e-36533dbd11fd">
+      <driver-ref>mariadb</driver-ref>
+      <synchronize>true</synchronize>
+      <configured-by-url>true</configured-by-url>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://database-1.cdc5uuou6eov.eu-west-3.rds.amazonaws.com:3306/projet-pc3r?user=admin</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
