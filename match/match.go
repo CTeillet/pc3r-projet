@@ -140,9 +140,11 @@ func LoadAllPastMatch() {
 
 func LoadComingMatchWeek() {
 	req := "https://api.pandascore.co/lol/matches/upcoming?token=4xg85-0CNl9sOdk-tyFooufCsE8qchuK478B5bUoAOV0j3cREdQ"
-	t := time.Now()
-	req += "&range[begin_at]=" + t.Format("2006-01-02T15:04:05-0700") + "," + t.Add(time.Hour*24*7).Format("2006-01-02T15:04:05-0700")
-	resp, _ := http.Get(req + "&page[size]=100")
+	t := time.Now().Add(time.Minute)
+	req += "&range[begin_at]=" + strings.Split(t.Format("2006-01-02T15:04:05-0700"), "+")[0] + "," + strings.Split(t.Add(time.Hour*24*7*2).Format("2006-01-02T15:04:05-0700"), "+")[0]
+	s := req + "&page[size]=100"
+	fmt.Println(s)
+	resp, _ := http.Get(s)
 	JSONMatch2SQL(resp)
 
 	test := resp.Header.Get("Link")
@@ -164,15 +166,17 @@ func LoadComingMatchWeek() {
 		panic(err)
 	}
 	max, err := strconv.Atoi(q.Get("page"))
-	if err != nil {
-		panic(err)
-	}
 	fmt.Println(max)
+	if err != nil {
+		//panic(err.Error())
+		max = 0
+	}
+
 	for i := 2; i < max+1; i++ {
 		s := req + "&page[size]=100&page[number]=" + strconv.Itoa(i)
 		fmt.Println(s)
 		resp, _ := http.Get(s)
-		JSONMatch2SQL(resp)
+		go JSONMatch2SQL(resp)
 		time.Sleep(100 * time.Millisecond)
 	}
 }
@@ -184,7 +188,7 @@ func JSONMatch2SQL(resp *http.Response) {
 	if err != nil {
 		panic(err.Error())
 	}
-	go addMulipleMatch(data)
+	addMulipleMatch(data)
 }
 
 func addMulipleMatch(data utils.MatchJSON) {
@@ -192,6 +196,8 @@ func addMulipleMatch(data utils.MatchJSON) {
 		//time.Sleep(150*time.Millisecond)
 		if len(v.Opponents) == 2 {
 			addMatch(v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Status, v.Winner.Acronym, v.BeginAt)
+		} else {
+			addMatch(v.Videogame.Name, v.League.Name, "", "", v.Status, v.Winner.Acronym, v.BeginAt)
 		}
 	}
 }
