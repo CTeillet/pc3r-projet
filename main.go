@@ -119,8 +119,8 @@ func main() {
 		port = "8080"
 	}
 
-	match.LoadAllPastMatch()
-
+	//match.LoadAllPastMatch()
+	match.LoadComingMatchWeek()
 	/*
 		http.HandleFunc("/", handleHome)
 		http.HandleFunc("/user", handleUser)

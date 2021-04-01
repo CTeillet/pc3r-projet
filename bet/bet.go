@@ -1,6 +1,9 @@
 package bet
 
-import "net/http"
+import (
+	"net/http"
+	"time"
+)
 
 type Bet struct {
 	id             int
@@ -8,6 +11,7 @@ type Bet struct {
 	equipeGagnante string
 	cote           float32
 	montant        int
+	date           time.Time
 }
 
 func GetBet(_ http.ResponseWriter, _ *http.Request) {

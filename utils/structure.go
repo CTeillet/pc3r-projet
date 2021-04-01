@@ -2,7 +2,7 @@ package utils
 
 import "time"
 
-type MatchPastJSON []struct {
+type MatchJSON []struct {
 	Winner struct {
 		Acronym    string    `json:"acronym"`
 		ID         int       `json:"id"`
@@ -12,7 +12,7 @@ type MatchPastJSON []struct {
 		Name       string    `json:"name"`
 		Slug       string    `json:"slug"`
 	} `json:"winner"`
-	Opponents []struct {
+	Opponents []struct { //Taille 2
 		Opponent struct {
 			Acronym    string    `json:"acronym"`
 			ID         int       `json:"id"`
