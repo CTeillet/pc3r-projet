@@ -121,7 +121,7 @@ func main() {
 	}
 
 	//go match.LoadAllPastMatch()
-	go match.LoadComingMatchWeek()
+	//go match.LoadComingMatchWeek()
 
 	http.HandleFunc("/", handleHome)
 	http.HandleFunc("/user", handleUser)
