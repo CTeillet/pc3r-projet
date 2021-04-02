@@ -8,8 +8,10 @@ import (
 	"gitlab.com/CTeillet/pc3r-projet/message"
 	"gitlab.com/CTeillet/pc3r-projet/user"
 	"gitlab.com/CTeillet/pc3r-projet/utils"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 func handleUser(w http.ResponseWriter, r *http.Request) {
@@ -112,7 +114,7 @@ func handleProblem(w http.ResponseWriter, _ *http.Request) {
 	utils.SendResponse(w, http.StatusInternalServerError, `{"message":"problem"}`)
 }
 
-func main() {
+/*func main() {
 	port := "5000"
 
 	//go match.LoadAllPastMatch()
@@ -127,4 +129,36 @@ func main() {
 	http.HandleFunc("/messsage", handleMessage)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 
+}*/
+
+func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "5000"
+	}
+
+	f, _ := os.Create("/var/log/golang/golang-server.log")
+	defer f.Close()
+	log.SetOutput(f)
+
+	const indexPage = "public/index.html"
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "POST" {
+			if buf, err := ioutil.ReadAll(r.Body); err == nil {
+				log.Printf("Received message: %s\n", string(buf))
+			}
+		} else {
+			log.Printf("Serving %s to %s...\n", indexPage, r.RemoteAddr)
+			http.ServeFile(w, r, indexPage)
+		}
+	})
+
+	http.HandleFunc("/scheduled", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "POST" {
+			log.Printf("Received task %s scheduled at %s\n", r.Header.Get("X-Aws-Sqsd-Taskname"), r.Header.Get("X-Aws-Sqsd-Scheduled-At"))
+		}
+	})
+
+	log.Printf("Listening on port %s\n\n", port)
+	http.ListenAndServe(":"+port, nil)
 }
