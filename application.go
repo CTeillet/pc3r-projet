@@ -114,11 +114,7 @@ func handleProblem(w http.ResponseWriter, _ *http.Request) {
 }
 
 func main() {
-	port := os.Getenv("PORT")
-
-	if port == "" {
-		port = "8080"
-	}
+	port := "5000"
 
 	//go match.LoadAllPastMatch()
 	//go match.LoadComingMatchWeek()
