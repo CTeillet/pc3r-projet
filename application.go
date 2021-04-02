@@ -120,7 +120,7 @@ func main() {
 		port = "8080"
 	}
 
-	go match.LoadAllPastMatch()
+	//go match.LoadAllPastMatch()
 	go match.LoadComingMatchWeek()
 
 	http.HandleFunc("/", handleHome)
