@@ -8,7 +8,6 @@ import (
 	"gitlab.com/CTeillet/pc3r-projet/message"
 	"gitlab.com/CTeillet/pc3r-projet/user"
 	"gitlab.com/CTeillet/pc3r-projet/utils"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -16,6 +15,7 @@ import (
 
 func handleUser(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
+	log.Printf("User\n")
 	if err != nil {
 		handleProblem(w, r)
 	}
@@ -35,6 +35,7 @@ func handleUser(w http.ResponseWriter, r *http.Request) {
 
 func handleBet(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
+	log.Printf("Bet\n")
 	if err != nil {
 		handleProblem(w, r)
 	}
@@ -52,6 +53,7 @@ func handleBet(w http.ResponseWriter, r *http.Request) {
 
 func handleMatch(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
+	log.Printf("Match\n")
 	if err != nil {
 		handleProblem(w, r)
 	}
@@ -65,6 +67,7 @@ func handleMatch(w http.ResponseWriter, r *http.Request) {
 
 func handleConnexion(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
+	log.Printf("Connexion\n")
 	if err != nil {
 		handleProblem(w, r)
 	}
@@ -80,6 +83,7 @@ func handleConnexion(w http.ResponseWriter, r *http.Request) {
 
 func handleCoins(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
+	log.Printf("Coins\n")
 	if err != nil {
 		handleProblem(w, r)
 	}
@@ -93,6 +97,7 @@ func handleCoins(w http.ResponseWriter, r *http.Request) {
 
 func handleMessage(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
+	log.Printf("Message\n")
 	if err != nil {
 		handleProblem(w, r)
 	}
@@ -103,19 +108,29 @@ func handleMessage(w http.ResponseWriter, r *http.Request) {
 		message.PostMessage(w, r)
 	case "DELETE":
 		message.DeleteMessage(w, r)
+	default:
+		handleProblem(w, r)
 	}
 }
 
 func handleHome(w http.ResponseWriter, _ *http.Request) {
+	log.Printf("Welcome\n")
 	utils.SendResponse(w, http.StatusOK, `{"message":"hello world!"}`)
 }
 
 func handleProblem(w http.ResponseWriter, _ *http.Request) {
+	log.Printf("A problem appear\n")
 	utils.SendResponse(w, http.StatusInternalServerError, `{"message":"problem"}`)
 }
 
-/*func main() {
-	port := "5000"
+func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "5000"
+	}
+	f, _ := os.Create("/var/log/golang/golang-server.log")
+	defer f.Close()
+	log.SetOutput(f)
 
 	//go match.LoadAllPastMatch()
 	//go match.LoadComingMatchWeek()
@@ -127,38 +142,8 @@ func handleProblem(w http.ResponseWriter, _ *http.Request) {
 	http.HandleFunc("/connexion", handleConnexion)
 	http.HandleFunc("/coins", handleCoins)
 	http.HandleFunc("/messsage", handleMessage)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
-
-}*/
-
-func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "5000"
-	}
-
-	f, _ := os.Create("/var/log/golang/golang-server.log")
-	defer f.Close()
-	log.SetOutput(f)
-
-	const indexPage = "public/index.html"
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "POST" {
-			if buf, err := ioutil.ReadAll(r.Body); err == nil {
-				log.Printf("Received message: %s\n", string(buf))
-			}
-		} else {
-			log.Printf("Serving %s to %s...\n", indexPage, r.RemoteAddr)
-			http.ServeFile(w, r, indexPage)
-		}
-	})
-
-	http.HandleFunc("/scheduled", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "POST" {
-			log.Printf("Received task %s scheduled at %s\n", r.Header.Get("X-Aws-Sqsd-Taskname"), r.Header.Get("X-Aws-Sqsd-Scheduled-At"))
-		}
-	})
 
 	log.Printf("Listening on port %s\n\n", port)
 	http.ListenAndServe(":"+port, nil)
+
 }
