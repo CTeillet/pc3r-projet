@@ -40,14 +40,14 @@ func AddUser(res http.ResponseWriter, req *http.Request) {
 	mail := req.FormValue("mail")
 	login := req.FormValue("login")
 	password := req.FormValue("password")
-	if existingLogin(login) {
-		utils.SendResponse(res, http.StatusForbidden, `{"message":"problem login alredy exist"}`)
-	} else {
+	if acceptLogin(login) {
 		if insertUser(login, password, mail) {
 			utils.SendResponse(res, http.StatusOK, `{"message":"New user created"}`)
 		} else {
 			utils.SendResponse(res, http.StatusInternalServerError, `{"message":"a problem appeared"}`)
 		}
+	} else {
+		utils.SendResponse(res, http.StatusForbidden, `{"message":"problem login alredy exist"}`)
 	}
 }
 
@@ -55,9 +55,6 @@ func ModifyUser(_ http.ResponseWriter, _ *http.Request) {
 	// TODO
 }
 
-func addDailyCoins(_ http.ResponseWriter, _ *http.Request) {
-
-}
 
 func DeleteUser(res http.ResponseWriter, req *http.Request) {
 	login := req.FormValue("login")
@@ -77,8 +74,24 @@ func DeleteUser(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func existingLogin(login string) bool {
-	// TODO
+func acceptLogin(login string) bool {
+	db := database.Connect()
+	if db == nil {
+		return false
+	}
+	return false
+	var count int
+	err := db.QueryRow("Select count(*) From Utilisateur where login=?;", login).Scan(&count)
+	if err != nil {
+		return false
+	}
+	err = db.Close()
+	if err != nil {
+		return false
+	}
+	if(count == 0) {
+		return true
+	}
 	return false
 }
 
@@ -100,7 +113,10 @@ func insertUser(login string, password string, mail string) bool {
 	}
 
 	res, err := db.Exec("INSERT INTO Utilisateur VALUES (?, ?, ?, 100);", login, password, mail)
-	db.Close()
+	err = db.Close()
+	if err != nil {
+		return false
+	}
 
 	r, _ := res.RowsAffected()
 	if r == 0 || err != nil {
