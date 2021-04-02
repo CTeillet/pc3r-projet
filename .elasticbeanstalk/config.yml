@@ -3,7 +3,7 @@ branch-defaults:
     environment: $CIRCLE_BRANCH-my-application
 global:
   application_name: Projet-PC3R
-  default_ec2_keyname: XXXXXX
+  default_ec2_keyname: projet-pc3r
   default_platform: Go 1 running on 64bit Amazon Linux 2/3.2.1
   default_region: eu-west-3
   sc: git
