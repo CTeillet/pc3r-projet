@@ -144,6 +144,9 @@ func main() {
 	http.HandleFunc("/messsage", handleMessage)
 
 	log.Printf("Listening on port %s\n\n", port)
-	http.ListenAndServe(":"+port, nil)
+	err := http.ListenAndServe(":"+port, nil)
+	if err != nil {
+		panic(err.Error())
+	}
 
 }

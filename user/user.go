@@ -17,10 +17,9 @@ func GetUser(res http.ResponseWriter, req *http.Request) {
 	//Recuperation des parametres de la requete http
 	idSession := req.FormValue("idSession")
 	login := req.FormValue("login")
-	//verif connexion 
+	//verif connexion
 	if utils.IsConnected(idSession) != "" {
-		var user *User = nil
-		searchUser(login, user)
+		var user = searchUser(login)
 		if user != nil {
 			if user.login != "" {
 				cagnotte := strconv.Itoa(user.cagnotte)
@@ -55,13 +54,12 @@ func ModifyUser(_ http.ResponseWriter, _ *http.Request) {
 	// TODO
 }
 
-
 func DeleteUser(res http.ResponseWriter, req *http.Request) {
 	login := req.FormValue("login")
 	password := req.FormValue("password")
-	idSession :=req.FormValue("idSession")
+	idSession := req.FormValue("idSession")
 	if utils.IsConnected(idSession) != "" && idSession != "" {
-		if utils.isUser(login, password) {
+		if utils.IsUser(login, password) {
 			if removeUser(login, password) {
 				utils.SendResponse(res, http.StatusOK, `{"message":"deleted user"}`)
 			} else {
@@ -79,7 +77,6 @@ func acceptLogin(login string) bool {
 	if db == nil {
 		return false
 	}
-	return false
 	var count int
 	err := db.QueryRow("Select count(*) From Utilisateur where login=?;", login).Scan(&count)
 	if err != nil {
@@ -89,21 +86,23 @@ func acceptLogin(login string) bool {
 	if err != nil {
 		return false
 	}
-	if(count == 0) {
+	if count == 0 {
 		return true
 	}
 	return false
 }
 
-func searchUser(login string, u *User) {
+func searchUser(login string) *User {
 	db := database.Connect()
 	if db == nil {
-		return
+		return nil
 	}
 
-	db.QueryRow("Select login, mail, cagnotte From Utilisateur where login=?;", login).Scan(u.login, u.mail, u.cagnotte)
+	u := User{}
+
+	db.QueryRow("Select login, mail, cagnotte From Utilisateur where login=?;", login).Scan(&u.login, &u.mail, &u.cagnotte)
 	db.Close()
-	return
+	return &u
 }
 
 func insertUser(login string, password string, mail string) bool {
@@ -118,7 +117,7 @@ func insertUser(login string, password string, mail string) bool {
 		return false
 	}
 
-	r, _ := res.RowsAffected()
+	r, err := res.RowsAffected()
 	if r == 0 || err != nil {
 		return false
 	} else {

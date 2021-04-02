@@ -2,7 +2,6 @@ package connexion
 
 import (
 	"gitlab.com/CTeillet/pc3r-projet/database"
-	"gitlab.com/CTeillet/pc3r-projet/user"
 	"gitlab.com/CTeillet/pc3r-projet/utils"
 	"math/rand"
 	"net/http"
@@ -11,7 +10,7 @@ import (
 func Connect(w http.ResponseWriter, r *http.Request) {
 	login := r.FormValue("login")
 	password := r.FormValue("password")
-	if utils.isUser(login, password) {
+	if utils.IsUser(login, password) {
 		idSession := addConnexion(login)
 		if idSession != "" {
 			utils.SendResponse(w, http.StatusOK, `{"message":"user connected", "idSession":"`+idSession+`"}`)
