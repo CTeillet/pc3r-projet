@@ -130,23 +130,3 @@ func removeUser(login string, password string) bool {
 	}
 	return false
 }
-
-func isUser(login string, password string) bool {
-	db := database.Connect()
-	if db == nil {
-		return false
-	}
-	count := 0
-	err := db.QueryRow("Select count(*) From Connexion where login=? and password=?;", login, password).Scan(&count)
-	if err != nil {
-		return false
-	}
-	err = db.Close()
-	if err != nil {
-		return false
-	}
-	if count == 1{
-		return true
-	}
-	return false
-}
