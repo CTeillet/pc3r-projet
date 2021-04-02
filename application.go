@@ -10,7 +10,6 @@ import (
 	"gitlab.com/CTeillet/pc3r-projet/utils"
 	"log"
 	"net/http"
-	"os"
 )
 
 func handleUser(w http.ResponseWriter, r *http.Request) {

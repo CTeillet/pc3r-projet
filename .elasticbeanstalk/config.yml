@@ -1,6 +1,3 @@
-branch-defaults:
-  master:
-    environment: $CIRCLE_BRANCH-my-application
 global:
   application_name: Projet-PC3R
   default_ec2_keyname: projet-pc3r
