@@ -11,7 +11,7 @@ import (
 func Connect(w http.ResponseWriter, r *http.Request) {
 	login := r.FormValue("login")
 	password := r.FormValue("password")
-	if user.IsUser(login, password) {
+	if utils.isUser(login, password) {
 		idSession := addConnexion(login)
 		if idSession != "" {
 			utils.SendResponse(w, http.StatusOK, `{"message":"user connected", "idSession":"`+idSession+`"}`)

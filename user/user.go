@@ -14,8 +14,10 @@ type User struct {
 }
 
 func GetUser(res http.ResponseWriter, req *http.Request) {
+	//Recuperation des parametres de la requete http
 	idSession := req.FormValue("idSession")
 	login := req.FormValue("login")
+	//verif connexion 
 	if utils.IsConnected(idSession) != "" {
 		var user *User = nil
 		searchUser(login, user)
@@ -50,18 +52,33 @@ func AddUser(res http.ResponseWriter, req *http.Request) {
 }
 
 func ModifyUser(_ http.ResponseWriter, _ *http.Request) {
+	// TODO
+}
+
+func addDailyCoins(_ http.ResponseWriter, _ *http.Request) {
 
 }
 
-func DeleteUser(_ http.ResponseWriter, _ *http.Request) {
+func DeleteUser(res http.ResponseWriter, req *http.Request) {
+	login := req.FormValue("login")
+	password := req.FormValue("password")
+	idSession :=req.FormValue("idSession")
+	if utils.IsConnected(idSession) != "" && idSession != "" {
+		if utils.isUser(login, password) {
+			if removeUser(login, password) {
+				utils.SendResponse(res, http.StatusOK, `{"message":"deleted user"}`)
+			} else {
+				utils.SendResponse(res, http.StatusInternalServerError, `{"message":"problem with database"}`)
+			}
 
-}
-
-func IsUser(login string, password string) bool {
-	return true
+		} else {
+			utils.SendResponse(res, http.StatusForbidden, `{"message":"Error : wrong login or password"}`)
+		}
+	}
 }
 
 func existingLogin(login string) bool {
+	// TODO
 	return false
 }
 
@@ -91,4 +108,25 @@ func insertUser(login string, password string, mail string) bool {
 	} else {
 		return true
 	}
+}
+
+func removeUser(login string, password string) bool {
+	db := database.Connect()
+	if db == nil {
+		return false
+	}
+	res, err := db.Exec("Delete from Utilisateur where login=? and password=?;", login, password)
+	if err != nil {
+		return false
+	}
+	err = db.Close()
+	if err != nil {
+		return false
+	}
+
+	r, _ := res.RowsAffected()
+	if r == 1 {
+		return true
+	}
+	return false
 }
