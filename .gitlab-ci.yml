@@ -1,5 +1,28 @@
+image: java:8-jdk
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  allow_failure: false
+  script:
+    - ./gradlew clean build test war
+  artifacts:
+    paths:
+      - build/libs/mySampleApp.war
+
 deploy:
+  image: python:latest
   stage: deploy
   script:
-  - gem install dpl
-  - dpl --provider=heroku --app=$HEROKU_APP --api-key=$HEROKU_API_KEY
+    - pip install awscli
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set region eu-central-1
+    - aws s3 cp build/libs/mySampleApp.war s3://elasticbeanstalk-eu-central-1-11111222222233/mySampleApp-$CI_PIPELINE_ID.war
+    - aws elasticbeanstalk create-application-version --application-name mySampleApp --version-label mySampleApp-$CI_PIPELINE_ID --source-bundle S3Bucket=elasticbeanstalk-eu-central-1-11111222222233,S3Key=mySampleApp-$CI_PIPELINE_ID.war
+    - aws elasticbeanstalk update-environment --application-name mySampleApp --environment-name mySampleApp-env --version-label mySampleApp-$CI_PIPELINE_ID
+  dependencies:
+    - build
