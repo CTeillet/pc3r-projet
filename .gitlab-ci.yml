@@ -3,4 +3,4 @@ deploy:
   image : agoncaruks/aws-elastic-beanstalk-cli
   script:
   - eb init -p go projet-pc3r --region $AWS_DEFAULT_REGION 
-  - eb create projet-pc3r
+  - eb deploy projet-pc3r
