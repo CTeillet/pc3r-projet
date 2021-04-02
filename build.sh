@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Stops the process if something fails
 set -xe
 touch /var/app/current/go.bak
