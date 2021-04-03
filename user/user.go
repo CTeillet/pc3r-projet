@@ -16,23 +16,27 @@ type User struct {
 func GetUser(res http.ResponseWriter, req *http.Request) {
 	//Recuperation des parametres de la requete http
 	idSession := req.FormValue("idSession")
-	login := req.FormValue("login")
+
+	login := utils.IsConnected(idSession)
 	//verif connexion
-	if utils.IsConnected(idSession) != "" {
-		var user = searchUser(login)
-		if user != nil {
-			if user.login != "" {
-				cagnotte := strconv.Itoa(user.cagnotte)
-				utils.SendResponse(res, http.StatusOK, `{"message":"user found", "login":"`+user.login+`", "mail":"`+user.mail+`", "cagnotte":"`+cagnotte+`"}`)
-			} else {
-				utils.SendResponse(res, http.StatusForbidden, `{"message":"problem login user don't exist"}`)
-			}
-		} else {
-			utils.SendResponse(res, http.StatusInternalServerError, `{"message":"a problem appeared"}`)
-		}
-	} else {
+	if login == "" {
 		utils.SendResponse(res, http.StatusForbidden, `{"message":"user was not connected"}`)
+		return
 	}
+
+	var user = searchUser(login)
+	if user == nil {
+		utils.SendResponse(res, http.StatusInternalServerError, `{"message":"a problem appeared"}`)
+		return
+	}
+
+	if user.login != "" {
+		cagnotte := strconv.Itoa(user.cagnotte)
+		utils.SendResponse(res, http.StatusOK, `{"message":"user found", "login":"`+user.login+`", "mail":"`+user.mail+`", "cagnotte":"`+cagnotte+`"}`)
+	} else {
+		utils.SendResponse(res, http.StatusForbidden, `{"message":"problem login user don't exist"}`)
+	}
+
 }
 
 func AddUser(res http.ResponseWriter, req *http.Request) {
@@ -100,8 +104,14 @@ func searchUser(login string) *User {
 
 	u := User{}
 
-	db.QueryRow("Select login, mail, cagnotte From Utilisateur where login=?;", login).Scan(&u.login, &u.mail, &u.cagnotte)
-	db.Close()
+	err := db.QueryRow("Select login, mail, cagnotte From Utilisateur where login=?;", login).Scan(&u.login, &u.mail, &u.cagnotte)
+	if err != nil {
+		return nil
+	}
+	err = db.Close()
+	if err != nil {
+		return nil
+	}
 	return &u
 }
 

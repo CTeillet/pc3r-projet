@@ -8,14 +8,6 @@
       <jdbc-url>mongodb+srv://cluster0.gf71f.mongodb.net/pc3r-projet</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="@Mysql Projet-pc3r" uuid="f237546b-85e3-40df-a485-b0b1c8256263">
-      <driver-ref>mariadb</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mariadb://cteillet.ddns.net:3306/projet-pc3r</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-      <time-zone>Europe/Paris</time-zone>
-    </data-source>
     <data-source source="LOCAL" name="@AWS Projet-pc3r" uuid="49c38795-cd54-43e4-ae0e-36533dbd11fd">
       <driver-ref>mariadb</driver-ref>
       <synchronize>true</synchronize>

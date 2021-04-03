@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 func handleUser(w http.ResponseWriter, r *http.Request) {
@@ -132,8 +133,8 @@ func main() {
 	defer f.Close()
 	log.SetOutput(f)
 
-	go match.LoadAllPastMatch()
-	go match.LoadComingMatchFor2Week()
+	//match.LoadAllPastMatch()
+	//match.LoadComingMatchFor2Week()
 
 	http.HandleFunc("/", handleHome)
 	http.HandleFunc("/user", handleUser)
@@ -149,4 +150,35 @@ func main() {
 		panic(err.Error())
 	}
 
+}
+
+func updateComingMatches() {
+	ticker := time.NewTicker(24 * time.Hour)
+	done := make(chan bool)
+	go func() {
+		for {
+			select {
+			case <-done:
+				return
+			case <-ticker.C:
+				log.Println()
+				match.LoadComingMatchFor2Week()
+			}
+		}
+	}()
+}
+
+func updateResultMatches() {
+	ticker := time.NewTicker(1 * time.Hour)
+	done := make(chan bool)
+	go func() {
+		for {
+			select {
+			case <-done:
+				return
+			case <-ticker.C:
+				match.LoadResultMatchFor1Hour()
+			}
+		}
+	}()
 }
