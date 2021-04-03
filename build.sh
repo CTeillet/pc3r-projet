@@ -1,7 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 # Stops the process if something fails
-set -xe
-touch /var/app/current/go.bak
 sudo rm /var/app/current/go.*
 
 # get all of the dependencies needed
