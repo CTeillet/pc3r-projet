@@ -100,7 +100,7 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 }
 
 //Ne pas appeler : LoadAllPastMatch
-func _() {
+func LoadAllPastMatch() {
 	req := "https://api.pandascore.co/lol/matches/past?token=4xg85-0CNl9sOdk-tyFooufCsE8qchuK478B5bUoAOV0j3cREdQ"
 
 	resp, _ := http.Get(req + "&page[size]=100")
@@ -138,7 +138,7 @@ func _() {
 	}
 }
 
-func _() {
+func LoadComingMatchFor2Week() {
 	req := "https://api.pandascore.co/lol/matches/upcoming?token=4xg85-0CNl9sOdk-tyFooufCsE8qchuK478B5bUoAOV0j3cREdQ"
 	t := time.Now().Add(time.Minute)
 	req += "&range[begin_at]=" + strings.Split(t.Format("2006-01-02T15:04:05-0700"), "+")[0] + "," + strings.Split(t.Add(time.Hour*24*7*2).Format("2006-01-02T15:04:05-0700"), "+")[0]

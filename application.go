@@ -132,8 +132,8 @@ func main() {
 	defer f.Close()
 	log.SetOutput(f)
 
-	//go match.LoadAllPastMatch()
-	//go match.LoadComingMatchWeek()
+	go match.LoadAllPastMatch()
+	go match.LoadComingMatchFor2Week()
 
 	http.HandleFunc("/", handleHome)
 	http.HandleFunc("/user", handleUser)
