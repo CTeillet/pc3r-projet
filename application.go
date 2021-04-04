@@ -131,8 +131,12 @@ func main() {
 	}
 	f, _ := os.Create("/var/log/golang/golang-server.log")
 	defer f.Close()
-	log.SetOutput(f)
+	//log.SetOutput(f)
 
+	updateComingMatches()
+	updateResultMatches()
+	updateResultBet()
+	//updateResultBet()
 	//match.LoadAllPastMatch()
 	//match.LoadComingMatchFor2Week()
 
@@ -154,6 +158,7 @@ func main() {
 
 func updateComingMatches() {
 	ticker := time.NewTicker(24 * time.Hour)
+	match.LoadComingMatchFor2Week()
 	done := make(chan bool)
 	go func() {
 		for {
@@ -170,6 +175,23 @@ func updateComingMatches() {
 
 func updateResultMatches() {
 	ticker := time.NewTicker(1 * time.Hour)
+	match.LoadResultMatchFor1Hour()
+	done := make(chan bool)
+	go func() {
+		for {
+			select {
+			case <-done:
+				return
+			case <-ticker.C:
+				match.LoadResultMatchFor1Hour()
+			}
+		}
+	}()
+}
+
+func updateResultBet() {
+	ticker := time.NewTicker(1 * time.Hour)
+	bet.UpdateResult1Hour()
 	done := make(chan bool)
 	go func() {
 		for {

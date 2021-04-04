@@ -135,5 +135,8 @@ func addBetSql(idMatch, equipeGagnante, cote, montant, login string) bool {
 		return false
 	}
 	return true
+}
+
+func UpdateResult1Hour() {
 
 }

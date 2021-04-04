@@ -144,7 +144,6 @@ func LoadComingMatchFor2Week() {
 	max, err := strconv.Atoi(q.Get("page"))
 	fmt.Println(max)
 	if err != nil {
-		//panic(err.Error())
 		max = 0
 	}
 
@@ -181,7 +180,7 @@ func addMatch(sport string, league string, equipeA string, equipeB string, statu
 	db := database.Connect()
 	_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, 1.0, ?, ?, ?);", sport, league, equipeA, equipeB, statut, winner, date)
 	if err != nil {
-		panic(err.Error())
+		//panic(err.Error())
 	}
 	err = db.Close()
 }
@@ -215,7 +214,7 @@ func LoadResultMatchFor1Hour() {
 	}
 	max, err := strconv.Atoi(q.Get("page"))
 	if err != nil {
-		panic(err)
+		max = 0
 	}
 	fmt.Println(max)
 	for i := 2; i < max+1; i++ {
@@ -239,9 +238,17 @@ func JSONMatchUpdate(resp *http.Response) {
 
 func updateMulipleMatch(data utils.MatchJSON) {
 	for _, v := range data {
-		//time.Sleep(150*time.Millisecond)
 		if len(v.Opponents) == 2 {
-			addMatch(v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Status, v.Winner.Acronym, v.BeginAt)
+			updateMatch(v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Winner.Acronym, v.BeginAt)
 		}
 	}
+}
+
+func updateMatch(sport string, league string, equipeA string, equipeB string, winner string, date time.Time) {
+	db := database.Connect()
+	_, err := db.Exec("Update Match where sport=? and league=? and equipeA=? and equipeB=? and date=? set winner=?);", sport, league, equipeA, equipeB, date, winner)
+	if err != nil {
+		panic(err.Error())
+	}
+	err = db.Close()
 }

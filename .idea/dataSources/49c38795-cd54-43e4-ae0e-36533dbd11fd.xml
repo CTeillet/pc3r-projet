@@ -1254,7 +1254,14 @@ login</ColNames>
       <DataType>int(5)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="373" parent="335" name="PRIMARY">
+    <column id="373" parent="335" name="derniereConnexion">
+      <Position>5</Position>
+      <DataType>timestamp|0s</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>current_timestamp()</DefaultExpression>
+      <OnUpdate>current_timestamp()</OnUpdate>
+    </column>
+    <key id="374" parent="335" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>login</ColNames>
       <Primary>1</Primary>
