@@ -130,7 +130,7 @@ func main() {
 		port = "5000"
 	}
 	f, _ := os.Create("/var/log/golang/golang-server.log")
-	defer f.Close()
+
 	log.SetOutput(f)
 
 	updateComingMatches()
@@ -151,6 +151,10 @@ func main() {
 		panic(err.Error())
 	}
 
+	err = f.Close()
+	if err != nil {
+		panic(err.Error())
+	}
 }
 
 func updateComingMatches() {
