@@ -131,14 +131,11 @@ func main() {
 	}
 	f, _ := os.Create("/var/log/golang/golang-server.log")
 	defer f.Close()
-	//log.SetOutput(f)
+	log.SetOutput(f)
 
 	updateComingMatches()
 	updateResultMatches()
 	updateResultBet()
-	//updateResultBet()
-	//match.LoadAllPastMatch()
-	//match.LoadComingMatchFor2Week()
 
 	http.HandleFunc("/", handleHome)
 	http.HandleFunc("/user", handleUser)

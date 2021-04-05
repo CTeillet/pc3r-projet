@@ -116,8 +116,8 @@ func _() {
 
 func LoadComingMatchFor2Week() {
 	req := "https://api.pandascore.co/lol/matches/upcoming?token=4xg85-0CNl9sOdk-tyFooufCsE8qchuK478B5bUoAOV0j3cREdQ"
-	t := time.Now().Add(time.Hour * 7 * 24)
-	req += "&range[begin_at]=" + strings.Split(t.Format("2006-01-02T15:04:05-0700"), "+")[0] + "," + strings.Split(t.Add(time.Hour*24).Format("2006-01-02T15:04:05-0700"), "+")[0]
+	t := time.Now()
+	req += "&range[begin_at]=" + strings.Split(t.Format("2006-01-02T15:04:05-0700"), "+")[0] + "," + strings.Split(t.Add(time.Hour*24*7*2).Format("2006-01-02T15:04:05-0700"), "+")[0]
 	s := req + "&page[size]=100"
 	fmt.Println(s)
 	resp, _ := http.Get(s)
@@ -171,16 +171,24 @@ func addMulipleMatch(data utils.MatchJSON) {
 		if len(v.Opponents) == 2 {
 			addMatch(v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Status, v.Winner.Acronym, v.BeginAt)
 		} else {
-			addMatch(v.Videogame.Name, v.League.Name, "", "", v.Status, v.Winner.Acronym, v.BeginAt)
+			addMatch(v.Videogame.Name, v.League.Name, "", "", v.Status, "", v.BeginAt)
 		}
 	}
 }
 
 func addMatch(sport string, league string, equipeA string, equipeB string, statut string, winner string, date time.Time) {
 	db := database.Connect()
-	_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, 1.0, ?, ?, ?);", sport, league, equipeA, equipeB, statut, winner, date)
+	//_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, 1.0, ?, ?, ?);", sport, league, equipeA, equipeB, statut, winner, date)
+	//fmt.Printf("Update `Match` set equipeA=%v and equipeB=%v and vainqueur=%v and statut=%v where sport=%v and league=%v and equipeA='' and equipeB='' and date=%v ;\n", equipeA, equipeB, winner, statut, sport, league, date)
+	_, err := db.Exec("Update `Match` set equipeA=? and equipeB=? and vainqueur=? and statut=? where sport=? and league=? and equipeA='' and equipeB='' and date=? ;", equipeA, equipeB, winner, statut, sport, league, date)
 	if err != nil {
-		//panic(err.Error())
+		_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, 1.0, ?, ?, ?);", sport, league, equipeA, equipeB, statut, winner, date)
+		if err != nil {
+			if !strings.Contains(err.Error(), "Duplicate") {
+				panic(err.Error())
+			}
+
+		}
 	}
 	err = db.Close()
 }
@@ -192,7 +200,7 @@ func LoadResultMatchFor1Hour() {
 	s := req + "&page[size]=100"
 	fmt.Println(s)
 	resp, _ := http.Get(s)
-	JSONMatch2SQL(resp)
+	JSONMatchUpdate(resp)
 
 	test := resp.Header.Get("Link")
 	res := strings.Split(test, ",")
@@ -239,14 +247,15 @@ func JSONMatchUpdate(resp *http.Response) {
 func updateMulipleMatch(data utils.MatchJSON) {
 	for _, v := range data {
 		if len(v.Opponents) == 2 {
-			updateMatch(v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Winner.Acronym, v.BeginAt)
+			updateMatch(v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Winner.Acronym, v.ScheduledAt, v.Status)
 		}
 	}
 }
 
-func updateMatch(sport string, league string, equipeA string, equipeB string, winner string, date time.Time) {
+func updateMatch(sport string, league string, equipeA string, equipeB string, winner string, date time.Time, statut string) {
 	db := database.Connect()
-	_, err := db.Exec("Update Match where sport=? and league=? and equipeA=? and equipeB=? and date=? set winner=?);", sport, league, equipeA, equipeB, date, winner)
+	fmt.Printf("Update `projet-pc3r`.`Match` SET `vainqueur`=%v and `statut`=%v where sport=%v and league=%v and equipeA=%v and equipeB=%v and `date`=%v and statut='not_started';\n", winner, statut, sport, league, equipeA, equipeB, date)
+	_, err := db.Exec("Update `projet-pc3r`.`Match` SET `vainqueur`=? , `statut`=? where sport=? and league=? and equipeA=? and equipeB=? and `date`=? and statut='not_started';", winner, statut, sport, league, equipeA, equipeB, date)
 	if err != nil {
 		panic(err.Error())
 	}
