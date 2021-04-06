@@ -14,15 +14,15 @@ import (
 )
 
 type Match struct {
-	id      int
-	sport   string
-	league  string
-	equipeA string
-	equipeB string
-	cote    float32
-	statut  string
+	id        int
+	sport     string
+	league    string
+	equipeA   string
+	equipeB   string
+	cote      float32
+	statut    string
 	vainqueur string
-	date	time.Time
+	date      time.Time
 }
 
 func GetMatch(w http.ResponseWriter, r *http.Request) {
@@ -197,7 +197,7 @@ func addMatch(sport string, league string, equipeA string, equipeB string, statu
 func LoadResultMatchFor1Hour() {
 	req := "https://api.pandascore.co/lol/matches/past?token=4xg85-0CNl9sOdk-tyFooufCsE8qchuK478B5bUoAOV0j3cREdQ"
 	t := time.Now()
-	req += "&range[begin_at]=" + strings.Split(t.Add(-1*time.Hour).Format("2006-01-02T15:04:05-0700"), "+")[0] + "," + strings.Split(t.Format("2006-01-02T15:04:05-0700"), "+")[0]
+	req += "&range[end_at]=" + strings.Split(t.Add(-1*time.Hour).Format("2006-01-02T15:04:05-0700"), "+")[0] + "," + strings.Split(t.Format("2006-01-02T15:04:05-0700"), "+")[0]
 	s := req + "&page[size]=100"
 	//fmt.Println(s)
 	resp, _ := http.Get(s)
@@ -261,7 +261,7 @@ func updateMatch(sport string, league string, equipeA string, equipeB string, wi
 	err = db.Close()
 }
 
-func WinnerIdMatch(idMatch int) string{
+func WinnerIdMatch(idMatch int) string {
 	db := database.Connect()
 	if db == nil {
 		return ""

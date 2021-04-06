@@ -166,13 +166,11 @@ func updateComingMatches() {
 			case <-done:
 				return
 			case <-ticker.C:
-				log.Println()
 				match.LoadComingMatchFor2Week()
 			}
 		}
 	}()
 }
-
 
 func updateResultMatchesAndBet() {
 	ticker := time.NewTicker(1 * time.Hour)
