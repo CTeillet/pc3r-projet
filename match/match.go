@@ -3,7 +3,6 @@ package match
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"gitlab.com/CTeillet/pc3r-projet/database"
 	"gitlab.com/CTeillet/pc3r-projet/utils"
 	"io/ioutil"
@@ -17,11 +16,13 @@ import (
 type Match struct {
 	id      int
 	sport   string
-	region  string
+	league  string
 	equipeA string
 	equipeB string
 	cote    float32
 	statut  string
+	vainqueur string
+	date	time.Time
 }
 
 func GetMatch(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +46,7 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 	if req == "" {
 		res, err = db.Query("Select * From Match where status='open';")
 	} else {
-		res, err = db.Query("Select * From Match where status='open' and (sport=? or region=? or equipeA=? or equipeB=?);", req)
+		res, err = db.Query("Select * From Match where status='open' and (sport=? or league=? or equipeA=? or equipeB=?);", req)
 	}
 
 	if err != nil {
@@ -60,7 +61,7 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 	resultat := make([]Match, 0)
 	for res.Next() {
 		m := Match{}
-		err := res.Scan(&m.id, &m.sport, &m.region, &m.equipeA, &m.equipeB, &m.cote, &m.statut)
+		err := res.Scan(&m.id, &m.sport, &m.league, &m.equipeA, &m.equipeB, &m.cote, &m.statut)
 		if err != nil {
 			utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem reading result request"`)
 			return
@@ -105,10 +106,10 @@ func _() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(max)
+	//fmt.Println(max)
 	for i := 2; i < max+1; i++ {
 		s := req + "&page[size]=100&page[number]=" + strconv.Itoa(i)
-		fmt.Println(s)
+		//fmt.Println(s)
 		resp, _ := http.Get(s)
 		go JSONMatch2SQL(resp)
 	}
@@ -119,7 +120,7 @@ func LoadComingMatchFor2Week() {
 	t := time.Now()
 	req += "&range[begin_at]=" + strings.Split(t.Format("2006-01-02T15:04:05-0700"), "+")[0] + "," + strings.Split(t.Add(time.Hour*24*7*2).Format("2006-01-02T15:04:05-0700"), "+")[0]
 	s := req + "&page[size]=100"
-	fmt.Println(s)
+	//fmt.Println(s)
 	resp, _ := http.Get(s)
 	JSONMatch2SQL(resp)
 
@@ -142,14 +143,14 @@ func LoadComingMatchFor2Week() {
 		panic(err)
 	}
 	max, err := strconv.Atoi(q.Get("page"))
-	fmt.Println(max)
+	//fmt.Println(max)
 	if err != nil {
 		max = 0
 	}
 
 	for i := 2; i < max+1; i++ {
 		s := req + "&page[size]=100&page[number]=" + strconv.Itoa(i)
-		fmt.Println(s)
+		//fmt.Println(s)
 		resp, _ := http.Get(s)
 		go JSONMatch2SQL(resp)
 	}
@@ -198,7 +199,7 @@ func LoadResultMatchFor1Hour() {
 	t := time.Now()
 	req += "&range[begin_at]=" + strings.Split(t.Add(-1*time.Hour).Format("2006-01-02T15:04:05-0700"), "+")[0] + "," + strings.Split(t.Format("2006-01-02T15:04:05-0700"), "+")[0]
 	s := req + "&page[size]=100"
-	fmt.Println(s)
+	//fmt.Println(s)
 	resp, _ := http.Get(s)
 	JSONMatchUpdate(resp)
 
@@ -224,10 +225,9 @@ func LoadResultMatchFor1Hour() {
 	if err != nil {
 		max = 0
 	}
-	fmt.Println(max)
 	for i := 2; i < max+1; i++ {
 		s := req + "&page[size]=100&page[number]=" + strconv.Itoa(i)
-		fmt.Println(s)
+		//fmt.Println(s)
 		resp, _ := http.Get(s)
 		JSONMatchUpdate(resp)
 	}
@@ -254,10 +254,23 @@ func updateMulipleMatch(data utils.MatchJSON) {
 
 func updateMatch(sport string, league string, equipeA string, equipeB string, winner string, date time.Time, statut string) {
 	db := database.Connect()
-	fmt.Printf("Update `projet-pc3r`.`Match` SET `vainqueur`=%v and `statut`=%v where sport=%v and league=%v and equipeA=%v and equipeB=%v and `date`=%v and statut='not_started';\n", winner, statut, sport, league, equipeA, equipeB, date)
 	_, err := db.Exec("Update `projet-pc3r`.`Match` SET `vainqueur`=? , `statut`=? where sport=? and league=? and equipeA=? and equipeB=? and `date`=? and statut='not_started';", winner, statut, sport, league, equipeA, equipeB, date)
 	if err != nil {
 		panic(err.Error())
 	}
 	err = db.Close()
+}
+
+func WinnerIdMatch(idMatch int) string{
+	db := database.Connect()
+	if db == nil {
+		return ""
+	}
+	m := Match{}
+	err := db.QueryRow("Select * From `Match` where id=?;", idMatch).Scan(&m.id, &m.sport, &m.league, &m.equipeA, &m.equipeB, &m.cote, &m.statut, &m.vainqueur, &m.date)
+	if err != nil {
+		panic(err.Error())
+	}
+	return m.vainqueur
+
 }

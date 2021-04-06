@@ -134,8 +134,7 @@ func main() {
 	log.SetOutput(f)
 
 	updateComingMatches()
-	updateResultMatches()
-	updateResultBet()
+	updateResultMatchesAndBet()
 
 	http.HandleFunc("/", handleHome)
 	http.HandleFunc("/user", handleUser)
@@ -143,7 +142,7 @@ func main() {
 	http.HandleFunc("/match", handleMatch)
 	http.HandleFunc("/connexion", handleConnexion)
 	http.HandleFunc("/coins", handleCoins)
-	http.HandleFunc("/messsage", handleMessage)
+	http.HandleFunc("/message", handleMessage)
 
 	log.Printf("Listening on port %s\n\n", port)
 	err := http.ListenAndServe(":"+port, nil)
@@ -174,24 +173,10 @@ func updateComingMatches() {
 	}()
 }
 
-func updateResultMatches() {
+
+func updateResultMatchesAndBet() {
 	ticker := time.NewTicker(1 * time.Hour)
 	match.LoadResultMatchFor1Hour()
-	done := make(chan bool)
-	go func() {
-		for {
-			select {
-			case <-done:
-				return
-			case <-ticker.C:
-				match.LoadResultMatchFor1Hour()
-			}
-		}
-	}()
-}
-
-func updateResultBet() {
-	ticker := time.NewTicker(1 * time.Hour)
 	bet.UpdateResult1Hour()
 	done := make(chan bool)
 	go func() {
@@ -201,6 +186,7 @@ func updateResultBet() {
 				return
 			case <-ticker.C:
 				match.LoadResultMatchFor1Hour()
+				bet.UpdateResult1Hour()
 			}
 		}
 	}()

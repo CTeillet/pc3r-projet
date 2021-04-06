@@ -9,7 +9,10 @@ import (
 func SendResponse(w http.ResponseWriter, status int, message string) {
 	w.WriteHeader(status)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(message))
+	_,err := w.Write([]byte(message))
+	if err != nil {
+		panic(err.Error())
+	}
 }
 
 func IsUser(login string, password string) bool {

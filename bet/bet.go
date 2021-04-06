@@ -1,10 +1,15 @@
 package bet
 
 import (
+	"database/sql"
 	"encoding/json"
+	"errors"
 	"gitlab.com/CTeillet/pc3r-projet/database"
+	"gitlab.com/CTeillet/pc3r-projet/match"
+	"gitlab.com/CTeillet/pc3r-projet/user"
 	"gitlab.com/CTeillet/pc3r-projet/utils"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -13,7 +18,7 @@ type Bet struct {
 	idMatch        int
 	equipeGagnante string
 	cote           float32
-	montant        int
+	montant        float32
 	login          string
 	resultat       string
 	date           time.Time
@@ -66,8 +71,14 @@ func AddBet(w http.ResponseWriter, r *http.Request) {
 	idSession := r.FormValue("idSession")
 	idMatch := r.FormValue("idMatch")
 	equipeGagnante := r.FormValue("equipeGagnante")
-	cote := r.FormValue("cote")
-	montant := r.FormValue("montant")
+	cote, err := strconv.ParseFloat(r.FormValue("cote"), 32)
+	if err != nil {
+		utils.SendResponse(w, http.StatusForbidden, `{"message": "wrong value for cote"`)
+	}
+	montant, err := strconv.ParseFloat(r.FormValue("montant"), 32)
+	if err != nil {
+		utils.SendResponse(w, http.StatusForbidden, `{"message": "wrong value for montant"`)
+	}
 
 	login := utils.IsConnected(idSession)
 
@@ -76,11 +87,12 @@ func AddBet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	testInsert := addBetSql(idMatch, equipeGagnante, cote, montant, login)
+	testInsert := addBetSql(idMatch, equipeGagnante, float32(cote), float32(montant), login)
 
 	if !testInsert {
 		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"`)
 	} else {
+		user.AlterMoney(login, float32(montant))
 		utils.SendResponse(w, http.StatusOK, `{"message":"New bet created"}`)
 	}
 
@@ -121,7 +133,7 @@ func removeBetSQL(pari, login string) bool {
 	return true
 }
 
-func addBetSql(idMatch, equipeGagnante, cote, montant, login string) bool {
+func addBetSql(idMatch , equipeGagnante string, cote float32, montant float32, login string) bool {
 	db := database.Connect()
 	if db == nil {
 		return false
@@ -138,5 +150,40 @@ func addBetSql(idMatch, equipeGagnante, cote, montant, login string) bool {
 }
 
 func UpdateResult1Hour() {
+	db := database.Connect()
+	if db == nil {
+		panic(errors.New("problem database connection"))
+	}
+	res, err := db.Query("Select * from  Pari as P where resultat='coming' and EXISTS( Select * From `Match` where id=P.idMatch and statut='finished');")
+	if err!= nil {
+		panic(err.Error())
+	}
+	//result := make([]Bet, 0)
+	for res.Next(){
+		b := Bet{}
+		err := res.Scan(&b.id, &b.idMatch, &b.equipeGagnante, &b.cote, &b.montant, &b.login, &b.resultat, &b.date)
+
+		if err != nil {
+			return
+		}
+
+		var r sql.Result
+		if b.resultat == match.WinnerIdMatch(b.idMatch) {
+			user.AlterMoney(b.login, b.montant*b.cote)
+			r, err = db.Exec("Update Pari set resultat='win' where id=?", b.id)
+		}else{
+			r, err = db.Exec("Update Pari set resultat='loose' where id=?", b.id)
+		}
+		if err != nil {
+
+		}
+		if err != nil{
+			return
+		}
+		res, err := r.RowsAffected()
+		if res != 1 {
+			return
+		}
+	}
 
 }

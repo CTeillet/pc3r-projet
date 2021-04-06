@@ -1,16 +1,20 @@
 package user
 
 import (
+	"fmt"
 	"gitlab.com/CTeillet/pc3r-projet/database"
 	"gitlab.com/CTeillet/pc3r-projet/utils"
 	"net/http"
-	"strconv"
+	"time"
 )
 
 type User struct {
+	id		 int
 	login    string
+	password string
 	mail     string
-	cagnotte int
+	cagnotte float32
+	derniereConnexion time.Time
 }
 
 func GetUser(res http.ResponseWriter, req *http.Request) {
@@ -31,7 +35,7 @@ func GetUser(res http.ResponseWriter, req *http.Request) {
 	}
 
 	if user.login != "" {
-		cagnotte := strconv.Itoa(user.cagnotte)
+		cagnotte := fmt.Sprintf("%f",user.cagnotte)
 		utils.SendResponse(res, http.StatusOK, `{"message":"user found", "login":"`+user.login+`", "mail":"`+user.mail+`", "cagnotte":"`+cagnotte+`"}`)
 	} else {
 		utils.SendResponse(res, http.StatusForbidden, `{"message":"problem login user don't exist"}`)
@@ -121,7 +125,7 @@ func insertUser(login string, password string, mail string) bool {
 		return false
 	}
 
-	res, err := db.Exec("INSERT INTO Utilisateur VALUES (?, ?, ?, 100);", login, password, mail)
+	res, err := db.Exec("INSERT INTO Utilisateur(login, password, mail, cagnotte) VALUES (?, ?, ?, 100);", login, password, mail)
 	err = db.Close()
 	if err != nil {
 		return false
@@ -154,4 +158,20 @@ func removeUser(login string, password string) bool {
 		return true
 	}
 	return false
+}
+
+func AlterMoney(loginUser string, amount float32) bool{
+	db:= database.Connect()
+	if db == nil{
+		return false
+	}
+	r, err := db.Exec("Update Utilisateur set cagnotte=cagnotte+? where login=?",amount, loginUser)
+	if err != nil {
+		return false
+	}
+	row, err := r.RowsAffected()
+	if err != nil ||row != 1 {
+		return false
+	}
+	return true
 }
