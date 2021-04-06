@@ -133,7 +133,7 @@ func removeBetSQL(pari, login string) bool {
 	return true
 }
 
-func addBetSql(idMatch , equipeGagnante string, cote float32, montant float32, login string) bool {
+func addBetSql(idMatch, equipeGagnante string, cote float32, montant float32, login string) bool {
 	db := database.Connect()
 	if db == nil {
 		return false
@@ -155,11 +155,11 @@ func UpdateResult1Hour() {
 		panic(errors.New("problem database connection"))
 	}
 	res, err := db.Query("Select * from  Pari as P where resultat='coming' and EXISTS( Select * From `Match` where id=P.idMatch and statut='finished');")
-	if err!= nil {
+	if err != nil {
 		panic(err.Error())
 	}
 	//result := make([]Bet, 0)
-	for res.Next(){
+	for res.Next() {
 		b := Bet{}
 		err := res.Scan(&b.id, &b.idMatch, &b.equipeGagnante, &b.cote, &b.montant, &b.login, &b.resultat, &b.date)
 
@@ -168,16 +168,17 @@ func UpdateResult1Hour() {
 		}
 
 		var r sql.Result
-		if b.resultat == match.WinnerIdMatch(b.idMatch) {
+		win := match.WinnerIdMatch(b.idMatch)
+		if b.equipeGagnante == win {
 			user.AlterMoney(b.login, b.montant*b.cote)
 			r, err = db.Exec("Update Pari set resultat='win' where id=?", b.id)
-		}else{
+		} else {
 			r, err = db.Exec("Update Pari set resultat='loose' where id=?", b.id)
 		}
 		if err != nil {
 
 		}
-		if err != nil{
+		if err != nil {
 			return
 		}
 		res, err := r.RowsAffected()
