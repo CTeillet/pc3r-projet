@@ -158,7 +158,6 @@ func UpdateResult1Hour() {
 	if err != nil {
 		panic(err.Error())
 	}
-	//result := make([]Bet, 0)
 	for res.Next() {
 		b := Bet{}
 		err := res.Scan(&b.id, &b.idMatch, &b.equipeGagnante, &b.cote, &b.montant, &b.login, &b.resultat, &b.date)
@@ -174,9 +173,6 @@ func UpdateResult1Hour() {
 			r, err = db.Exec("Update Pari set resultat='win' where id=?", b.id)
 		} else {
 			r, err = db.Exec("Update Pari set resultat='loose' where id=?", b.id)
-		}
-		if err != nil {
-
 		}
 		if err != nil {
 			return
