@@ -3,6 +3,7 @@ package match
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"gitlab.com/CTeillet/pc3r-projet/database"
 	"gitlab.com/CTeillet/pc3r-projet/utils"
 	"io/ioutil"
@@ -169,6 +170,7 @@ func JSONMatch2SQL(resp *http.Response) {
 func addMulipleMatch(data utils.MatchJSON) {
 	for _, v := range data {
 		//time.Sleep(150*time.Millisecond)
+		//fmt.Println(v)
 		if len(v.Opponents) == 2 {
 			addMatch(v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Status, v.Winner.Acronym, v.BeginAt)
 		} else {
@@ -180,15 +182,19 @@ func addMulipleMatch(data utils.MatchJSON) {
 func addMatch(sport string, league string, equipeA string, equipeB string, statut string, winner string, date time.Time) {
 	db := database.Connect()
 	//_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, 1.0, ?, ?, ?);", sport, league, equipeA, equipeB, statut, winner, date)
-	//fmt.Printf("Update `Match` set equipeA=%v and equipeB=%v and vainqueur=%v and statut=%v where sport=%v and league=%v and equipeA='' and equipeB='' and date=%v ;\n", equipeA, equipeB, winner, statut, sport, league, date)
-	_, err := db.Exec("Update `Match` set equipeA=? and equipeB=? and vainqueur=? and statut=? where sport=? and league=? and equipeA='' and equipeB='' and date=? ;", equipeA, equipeB, winner, statut, sport, league, date)
-	if err != nil {
-		_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, 1.0, ?, ?, ?);", sport, league, equipeA, equipeB, statut, winner, date)
-		if err != nil {
-			if !strings.Contains(err.Error(), "Duplicate") {
-				panic(err.Error())
-			}
+	fmt.Printf("Update `Match` set equipeA=%v , equipeB=%v , vainqueur=%v , statut=%v where sport=%v and league=%v and equipeA='' and equipeB='' and date=%v ;\n", equipeA, equipeB, winner, statut, sport, league, date)
+	r, err := db.Exec("Update `Match` set equipeA=? , equipeB=? , vainqueur=? , statut=? where sport=? and league=? and equipeA='' and equipeB='' and date=? ;", equipeA, equipeB, winner, statut, sport, league, date)
+	if err == nil {
+		nbRows, err2 := r.RowsAffected()
+		if err2 != nil || nbRows != 1 {
+			//fmt.Println(err.Error())
+			_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, 1.0, ?, ?, ?);", sport, league, equipeA, equipeB, statut, winner, date)
+			if err != nil {
+				if !strings.Contains(err.Error(), "Duplicate") {
+					panic(err.Error())
+				}
 
+			}
 		}
 	}
 	err = db.Close()
