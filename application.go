@@ -174,7 +174,7 @@ func updateComingMatches() {
 
 func updateResultMatchesAndBet() {
 	ticker := time.NewTicker(1 * time.Hour)
-	match.LoadResultMatchFor1Hour()
+	match.LoadResultMatchFor3Hours()
 	bet.UpdateResult1Hour()
 	done := make(chan bool)
 	go func() {
@@ -183,7 +183,7 @@ func updateResultMatchesAndBet() {
 			case <-done:
 				return
 			case <-ticker.C:
-				match.LoadResultMatchFor1Hour()
+				match.LoadResultMatchFor3Hours()
 				bet.UpdateResult1Hour()
 			}
 		}

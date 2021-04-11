@@ -200,10 +200,10 @@ func addMatch(sport string, league string, equipeA string, equipeB string, statu
 	err = db.Close()
 }
 
-func LoadResultMatchFor1Hour() {
+func LoadResultMatchFor3Hours() {
 	req := "https://api.pandascore.co/lol/matches/past?token=4xg85-0CNl9sOdk-tyFooufCsE8qchuK478B5bUoAOV0j3cREdQ"
 	t := time.Now()
-	req += "&range[end_at]=" + strings.Split(t.Add(-1*time.Hour).Format("2006-01-02T15:04:05-0700"), "+")[0] + "," + strings.Split(t.Format("2006-01-02T15:04:05-0700"), "+")[0]
+	req += "&range[end_at]=" + strings.Split(t.Add(-3*time.Hour).Format("2006-01-02T15:04:05-0700"), "+")[0] + "," + strings.Split(t.Format("2006-01-02T15:04:05-0700"), "+")[0]
 	s := req + "&page[size]=100"
 	//fmt.Println(s)
 	resp, _ := http.Get(s)
