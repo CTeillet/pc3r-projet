@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>G - Bet</title>
+    <link rel="stylesheet" href="index.css" type="text/css">
+    <script src="index.js"></script>
+</head>
+<body>
+    <header class="topnav" id="#">
+        <img src="img/logo.png" alt="logo" >
+        <button class="boutonIdentification" id="loginBtn">Connexion</button>
+        <button class="boutonIdentification" id="registerBtn">Inscription</button>
+<!--        <a class="active" href="#top">Home</a>-->
+<!--        <a href="#news">News</a>-->
+<!--        <a href="#contact">Contact</a>-->
+<!--        <a href="#about">About</a>-->
+        <!-- The Modal -->
+        <div id="loginModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <form action="" method="post">
+                    <div class="form-example">
+                        <label for="loginConnect">Entrer votre login.</label>
+                        <input type="text" name="login" id="loginConnect" required>
+                    </div>
+                    <div class="form-example">
+                        <label for="passwordConnect">Entrer votre mot de passe.</label>
+                        <input type="password" name="password" id="passwordConnect" required>
+                    </div>
+                    <div class="form-example">
+                        <input type="submit" value="Connexion">
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <div id="registerModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <form action="" method="post">
+                    <div class="form-example">
+                        <label for="loginRegister">Entrer votre login.</label>
+                        <input type="text" name="login" id="loginRegister" required>
+                    </div>
+                    <div class="form-example">
+                        <label for="mailRegister">Entrer votre adresse mail.</label>
+                        <input type="email" name="mail" id="mailRegister" required>
+                    </div>
+                    <div class="form-example">
+                        <label for="passwordRegister">Entrer votre mot de passe.</label>
+                        <input type="password" name="password" id="passwordRegister" required>
+                    </div>
+                    <div class="form-example">
+                        <input type="submit" value="Inscription">
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <div class="pariEnCours" id="pariEnCours">
+        <h1>Pari en cours</h1>
+
+    </div>
+
+
+    <div class="matchDisponible" id="matchDisponible">
+        <h1>Match disponible</h1>
+
+    </div>
+
+
+</body>
+
+</html>
