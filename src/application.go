@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"gitlab.com/CTeillet/pc3r-projet/src/bet"
 	"gitlab.com/CTeillet/pc3r-projet/src/coins"
 	"gitlab.com/CTeillet/pc3r-projet/src/connexion"
@@ -11,6 +12,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 )
 
@@ -132,14 +134,16 @@ func main() {
 	}
 	f, _ := os.Create("/var/log/golang/golang-server.log")
 
-	log.SetOutput(f)
+	//log.SetOutput(f)
 
 	updateComingMatches()
 	updateResultMatchesAndBet()
 
-	//http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("/web"))))
+	listFiles()
 
 	//http.HandleFunc("/", handleHome)
+
+	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("../web"))))
 
 	http.HandleFunc("/user", handleUser)
 	http.HandleFunc("/bet", handleBet)
@@ -157,6 +161,22 @@ func main() {
 	err = f.Close()
 	if err != nil {
 		panic(err.Error())
+	}
+}
+
+func listFiles() {
+	var files []string
+
+	root := "../web"
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+		files = append(files, path)
+		return nil
+	})
+	if err != nil {
+		panic(err)
+	}
+	for _, file := range files {
+		fmt.Println(file)
 	}
 }
 

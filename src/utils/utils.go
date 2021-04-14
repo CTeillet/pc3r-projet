@@ -3,13 +3,15 @@ package utils
 import (
 	"gitlab.com/CTeillet/pc3r-projet/src/database"
 	"net/http"
+	"strconv"
 	"time"
 )
 
 func SendResponse(w http.ResponseWriter, status int, message string) {
 	w.WriteHeader(status)
 	w.Header().Set("Content-Type", "application/json")
-	_, err := w.Write([]byte(message))
+	s := `{"code":"` + strconv.Itoa(status) + `",` + message[1:]
+	_, err := w.Write([]byte(s))
 	if err != nil {
 		panic(err.Error())
 	}

@@ -51,10 +51,10 @@ func AddUser(res http.ResponseWriter, req *http.Request) {
 		if insertUser(login, password, mail) {
 			utils.SendResponse(res, http.StatusOK, `{"message":"New user created"}`)
 		} else {
-			utils.SendResponse(res, http.StatusInternalServerError, `{"message":"a problem appeared"}`)
+			utils.SendResponse(res, http.StatusInternalServerError, `{"message":"A problem appeared"}`)
 		}
 	} else {
-		utils.SendResponse(res, http.StatusForbidden, `{"message":"problem login alredy exist"}`)
+		utils.SendResponse(res, http.StatusForbidden, `{"message":"Problem login already exist"}`)
 	}
 }
 
