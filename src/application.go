@@ -137,7 +137,7 @@ func main() {
 	updateComingMatches()
 	updateResultMatchesAndBet()
 
-	//http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("/web"))))
+	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("/web"))))
 
 	//http.HandleFunc("/", handleHome)
 
