@@ -115,7 +115,7 @@ func handleMessage(w http.ResponseWriter, r *http.Request) {
 }
 
 //HandleHome
-func _(w http.ResponseWriter, _ *http.Request) {
+func handleHome(w http.ResponseWriter, _ *http.Request) {
 	log.Printf("Welcome\n")
 	utils.SendResponse(w, http.StatusOK, `{"message":"hello world!"}`)
 }
@@ -139,7 +139,7 @@ func main() {
 
 	//http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("/web"))))
 
-	//http.HandleFunc("/", handleHome)
+	http.HandleFunc("/", handleHome)
 
 	http.HandleFunc("/user", handleUser)
 	http.HandleFunc("/bet", handleBet)
