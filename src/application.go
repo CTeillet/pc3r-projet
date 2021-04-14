@@ -117,9 +117,10 @@ func handleMessage(w http.ResponseWriter, r *http.Request) {
 }
 
 //HandleHome
-func _(w http.ResponseWriter, _ *http.Request) {
+func handleHome(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Welcome\n")
-	utils.SendResponse(w, http.StatusOK, `{"message":"hello world!"}`)
+	http.Redirect(w, r, "http://projet-pc3r.eba-d6ekfsap.eu-west-3.elasticbeanstalk.com/home/", 301)
+	//utils.SendResponse(w, http.StatusOK, `{"message":"hello world!"}`)
 }
 
 func handleProblem(w http.ResponseWriter, _ *http.Request) {
@@ -141,7 +142,7 @@ func main() {
 
 	listFiles()
 
-	//http.HandleFunc("/", handleHome)
+	http.HandleFunc("/", handleHome)
 
 	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("../web"))))
 
