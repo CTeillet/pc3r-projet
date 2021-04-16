@@ -27,7 +27,7 @@ type Bet struct {
 func GetBet(w http.ResponseWriter, r *http.Request) {
 	idSession := r.FormValue("idSession")
 
-	login := utils.IsConnected(idSession)
+	login := utils.IsConnectedIdSession(idSession)
 	if login == "" {
 		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"`)
 		return
@@ -80,7 +80,7 @@ func AddBet(w http.ResponseWriter, r *http.Request) {
 		utils.SendResponse(w, http.StatusForbidden, `{"message": "wrong value for montant"`)
 	}
 
-	login := utils.IsConnected(idSession)
+	login := utils.IsConnectedIdSession(idSession)
 
 	if login == "" {
 		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"`)
@@ -101,7 +101,7 @@ func AddBet(w http.ResponseWriter, r *http.Request) {
 func DeleteBet(w http.ResponseWriter, r *http.Request) {
 	idPari := r.FormValue("idPari")
 	idSession := r.FormValue("idSession")
-	login := utils.IsConnected(idSession)
+	login := utils.IsConnectedIdSession(idSession)
 
 	if login == "" {
 		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"`)

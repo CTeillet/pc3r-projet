@@ -1,6 +1,7 @@
 package connexion
 
 import (
+	"fmt"
 	"gitlab.com/CTeillet/pc3r-projet/src/database"
 	"gitlab.com/CTeillet/pc3r-projet/src/utils"
 	"math/rand"
@@ -10,6 +11,12 @@ import (
 func Connect(w http.ResponseWriter, r *http.Request) {
 	login := r.FormValue("login")
 	password := r.FormValue("password")
+	fmt.Printf("login : %v, password : %v\n", login, password)
+	idSession := utils.IsConnectedLogin(login)
+	if idSession != "" {
+		utils.SendResponse(w, http.StatusOK, `{"message":"user still connected", "idSession":"`+idSession+`"}`)
+		return
+	}
 	if utils.IsUser(login, password) {
 		idSession := addConnexion(login)
 		if idSession != "" {
@@ -26,7 +33,7 @@ func Connect(w http.ResponseWriter, r *http.Request) {
 func Disconnect(w http.ResponseWriter, r *http.Request) {
 	idSession := r.FormValue("idSession")
 
-	if utils.IsConnected(idSession) != "" && idSession != "" {
+	if utils.IsConnectedIdSession(idSession) != "" && idSession != "" {
 		if utils.RemoveConnection(idSession) {
 			utils.SendResponse(w, http.StatusOK, `{"message":"user disconnected"}`)
 		} else {

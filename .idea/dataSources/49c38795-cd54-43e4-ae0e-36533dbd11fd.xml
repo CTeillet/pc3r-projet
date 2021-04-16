@@ -1059,7 +1059,6 @@
       <Position>1</Position>
       <DataType>int(5)|0s</DataType>
       <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
     </column>
     <column id="337" parent="332" name="login">
       <Position>2</Position>
@@ -1077,74 +1076,78 @@
       <NotNull>1</NotNull>
       <DefaultExpression>current_timestamp()</DefaultExpression>
     </column>
-    <index id="340" parent="332" name="FOREIGN_KEY_LOGIN">
+    <index id="340" parent="332" name="id">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="341" parent="332" name="FOREIGN_KEY_LOGIN">
       <ColNames>login</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="341" parent="332" name="PRIMARY">
+    <key id="342" parent="332" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
-      <ColNames>id</ColNames>
+      <ColNames>login</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="342" parent="332" name="FOREIGN_KEY_LOGIN">
+    <foreign-key id="343" parent="332" name="FOREIGN_KEY_LOGIN">
       <ColNames>login</ColNames>
       <RefTableName>Utilisateur</RefTableName>
       <RefColNames>login</RefColNames>
       <OnUpdate>cascade</OnUpdate>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <column id="343" parent="333" name="id">
+    <column id="344" parent="333" name="id">
       <Position>1</Position>
       <DataType>bigint(5)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="344" parent="333" name="sport">
+    <column id="345" parent="333" name="sport">
       <Position>2</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="345" parent="333" name="league">
+    <column id="346" parent="333" name="league">
       <Position>3</Position>
       <DataType>varchar(40)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="346" parent="333" name="equipeA">
+    <column id="347" parent="333" name="equipeA">
       <Position>4</Position>
       <DataType>varchar(15)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="347" parent="333" name="equipeB">
+    <column id="348" parent="333" name="equipeB">
       <Position>5</Position>
       <DataType>varchar(15)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="348" parent="333" name="cote">
+    <column id="349" parent="333" name="cote">
       <Position>6</Position>
       <DataType>float|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="349" parent="333" name="statut">
+    <column id="350" parent="333" name="statut">
       <Position>7</Position>
       <DataType>enum(&apos;canceled&apos;, &apos;finished&apos;, &apos;not_started&apos;, &apos;postponed&apos;, &apos;running&apos;)|0e</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="350" parent="333" name="vainqueur">
+    <column id="351" parent="333" name="vainqueur">
       <Position>8</Position>
       <DataType>varchar(15)|0s</DataType>
     </column>
-    <column id="351" parent="333" name="date">
+    <column id="352" parent="333" name="date">
       <Position>9</Position>
       <DataType>timestamp|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>current_timestamp()</DefaultExpression>
       <OnUpdate>current_timestamp()</OnUpdate>
     </column>
-    <index id="352" parent="333" name="id">
+    <index id="353" parent="333" name="id">
       <ColNames>id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="353" parent="333" name="PRIMARY">
+    <key id="354" parent="333" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>sport
 league
@@ -1153,121 +1156,121 @@ equipeB
 date</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="354" parent="334" name="id">
+    <column id="355" parent="334" name="id">
       <Position>1</Position>
       <DataType>bigint(5)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="355" parent="334" name="idMatch">
+    <column id="356" parent="334" name="idMatch">
       <Position>2</Position>
       <DataType>bigint(5)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="356" parent="334" name="equipeGagnante">
+    <column id="357" parent="334" name="equipeGagnante">
       <Position>3</Position>
       <DataType>varchar(15)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="357" parent="334" name="cote">
+    <column id="358" parent="334" name="cote">
       <Position>4</Position>
       <DataType>float|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="358" parent="334" name="montant">
+    <column id="359" parent="334" name="montant">
       <Position>5</Position>
       <DataType>float|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="359" parent="334" name="login">
+    <column id="360" parent="334" name="login">
       <Position>6</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="360" parent="334" name="resultat">
+    <column id="361" parent="334" name="resultat">
       <Position>7</Position>
       <DataType>enum(&apos;win&apos;, &apos;loose&apos;, &apos;coming&apos;)|0e</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;coming&apos;</DefaultExpression>
     </column>
-    <column id="361" parent="334" name="date">
+    <column id="362" parent="334" name="date">
       <Position>8</Position>
       <DataType>timestamp|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>current_timestamp()</DefaultExpression>
       <OnUpdate>current_timestamp()</OnUpdate>
     </column>
-    <index id="362" parent="334" name="id">
+    <index id="363" parent="334" name="id">
       <ColNames>id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="363" parent="334" name="SECONDARY_KEY_IDMATCH">
+    <index id="364" parent="334" name="SECONDARY_KEY_IDMATCH">
       <ColNames>idMatch</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="364" parent="334" name="SECONDARY_KEY_LOGIN">
+    <index id="365" parent="334" name="SECONDARY_KEY_LOGIN">
       <ColNames>login</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="365" parent="334" name="PRIMARY">
+    <key id="366" parent="334" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>idMatch
 equipeGagnante
 login</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="366" parent="334" name="SECONDARY_KEY_IDMATCH">
+    <foreign-key id="367" parent="334" name="SECONDARY_KEY_IDMATCH">
       <ColNames>idMatch</ColNames>
       <RefTableName>Match</RefTableName>
       <RefColNames>id</RefColNames>
       <OnUpdate>cascade</OnUpdate>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <foreign-key id="367" parent="334" name="SECONDARY_KEY_LOGIN">
+    <foreign-key id="368" parent="334" name="SECONDARY_KEY_LOGIN">
       <ColNames>login</ColNames>
       <RefTableName>Utilisateur</RefTableName>
       <RefColNames>login</RefColNames>
       <OnUpdate>cascade</OnUpdate>
       <OnDelete>cascade</OnDelete>
     </foreign-key>
-    <column id="368" parent="335" name="id">
+    <column id="369" parent="335" name="id">
       <Position>1</Position>
       <DataType>bigint(5)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="369" parent="335" name="login">
+    <column id="370" parent="335" name="login">
       <Position>2</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="370" parent="335" name="password">
+    <column id="371" parent="335" name="password">
       <Position>3</Position>
       <DataType>varchar(15)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="371" parent="335" name="mail">
+    <column id="372" parent="335" name="mail">
       <Position>4</Position>
       <DataType>varchar(30)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="372" parent="335" name="cagnotte">
+    <column id="373" parent="335" name="cagnotte">
       <Position>5</Position>
       <DataType>float|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="373" parent="335" name="derniereConnexion">
+    <column id="374" parent="335" name="derniereConnexion">
       <Position>6</Position>
       <DataType>timestamp|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>current_timestamp()</DefaultExpression>
       <OnUpdate>current_timestamp()</OnUpdate>
     </column>
-    <index id="374" parent="335" name="id">
+    <index id="375" parent="335" name="id">
       <ColNames>id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="375" parent="335" name="PRIMARY">
+    <key id="376" parent="335" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>login</ColNames>
       <Primary>1</Primary>

@@ -10,7 +10,7 @@ func Generate(w http.ResponseWriter, r *http.Request) {
 	idSession := r.FormValue("idSession")
 	montant := r.FormValue("montant")
 
-	login := utils.IsConnected(idSession)
+	login := utils.IsConnectedIdSession(idSession)
 	if login == "" {
 		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"}`)
 		return

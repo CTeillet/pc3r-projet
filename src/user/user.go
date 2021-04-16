@@ -21,7 +21,7 @@ func GetUser(res http.ResponseWriter, req *http.Request) {
 	//Recuperation des parametres de la requete http
 	idSession := req.FormValue("idSession")
 
-	login := utils.IsConnected(idSession)
+	login := utils.IsConnectedIdSession(idSession)
 	//verif connexion
 	if login == "" {
 		utils.SendResponse(res, http.StatusForbidden, `{"message":"user was not connected"}`)
@@ -66,7 +66,7 @@ func DeleteUser(res http.ResponseWriter, req *http.Request) {
 	login := req.FormValue("login")
 	password := req.FormValue("password")
 	idSession := req.FormValue("idSession")
-	if utils.IsConnected(idSession) != "" && idSession != "" {
+	if utils.IsConnectedIdSession(idSession) != "" && idSession != "" {
 		if utils.IsUser(login, password) {
 			if removeUser(login, password) {
 				utils.SendResponse(res, http.StatusOK, `{"message":"deleted user"}`)

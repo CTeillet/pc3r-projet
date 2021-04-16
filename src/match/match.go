@@ -14,22 +14,22 @@ import (
 )
 
 type Match struct {
-	id        int
-	sport     string
-	league    string
-	equipeA   string
-	equipeB   string
-	cote      float32
-	statut    string
-	vainqueur string
-	date      time.Time
+	Id        int       `json:"id"`
+	Sport     string    `json:"sport"`
+	League    string    `json:"league"`
+	EquipeA   string    `json:"equipeA"`
+	EquipeB   string    `json:"equipeB"`
+	Cote      float32   `json:"cote"`
+	Statut    string    `json:"statut"`
+	Vainqueur string    `json:"vainqueur"`
+	Date      time.Time `json:"date"`
 }
 
 func GetMatch(w http.ResponseWriter, r *http.Request) {
 	req := r.FormValue("login")
 	idSession := r.FormValue("idSession")
 
-	login := utils.IsConnected(idSession)
+	login := utils.IsConnectedIdSession(idSession)
 	if login == "" {
 		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"`)
 		return
@@ -44,9 +44,9 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 	var res *sql.Rows
 	var err error
 	if req == "" {
-		res, err = db.Query("Select * From Match where status='open';")
+		res, err = db.Query("Select * From `Match` where statut='not_started' and equipeA<>'' and equipeB<>'';")
 	} else {
-		res, err = db.Query("Select * From Match where status='open' and (sport=? or league=? or equipeA=? or equipeB=?);", req)
+		res, err = db.Query("Select * From Match where statut='not_started' and (sport=? or league=? or equipeA=? or equipeB=?);", req)
 	}
 
 	if err != nil {
@@ -61,7 +61,7 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 	resultat := make([]Match, 0)
 	for res.Next() {
 		m := Match{}
-		err := res.Scan(&m.id, &m.sport, &m.league, &m.equipeA, &m.equipeB, &m.cote, &m.statut)
+		err := res.Scan(&m.Id, &m.Sport, &m.League, &m.EquipeA, &m.EquipeB, &m.Cote, &m.Statut, &m.Vainqueur, &m.Date)
 		if err != nil {
 			utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem reading result request"`)
 			return
@@ -73,7 +73,7 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem creation of JSON"`)
 		return
 	}
-	utils.SendResponse(w, http.StatusOK, `{"message": "result of match", "result":`+string(resultJSON)+"}")
+	utils.SendResponse(w, http.StatusOK, `{"message": "coming matches", "result":`+string(resultJSON)+"}")
 
 }
 
@@ -272,10 +272,10 @@ func WinnerIdMatch(idMatch int) string {
 		return ""
 	}
 	m := Match{}
-	err := db.QueryRow("Select * From `Match` where id=?;", idMatch).Scan(&m.id, &m.sport, &m.league, &m.equipeA, &m.equipeB, &m.cote, &m.statut, &m.vainqueur, &m.date)
+	err := db.QueryRow("Select * From `Match` where id=?;", idMatch).Scan(&m.Id, &m.Sport, &m.League, &m.EquipeA, &m.EquipeB, &m.Cote, &m.Statut, &m.Vainqueur, &m.Date)
 	if err != nil {
 		panic(err.Error())
 	}
-	return m.vainqueur
+	return m.Vainqueur
 
 }

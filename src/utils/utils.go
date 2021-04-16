@@ -44,13 +44,13 @@ type Connexion struct {
 	date      time.Time
 }
 
-func IsConnected(idSession string) string {
+func IsConnectedIdSession(idSession string) string {
 	db := database.Connect()
 	if db == nil {
 		return ""
 	}
 	c := Connexion{}
-	err := db.QueryRow("Select * From Connexion where idSession=?;", idSession).Scan(&c.id, &c.login, &c.idSession, c.date)
+	err := db.QueryRow("Select * From Connexion where idSession=?;", idSession).Scan(&c.id, &c.login, &c.idSession, &c.date)
 	if err != nil {
 		return ""
 	}
@@ -59,21 +59,35 @@ func IsConnected(idSession string) string {
 		return ""
 	}
 
-	t := time.Now()
+	t := time.Now().UTC()
 	comp := c.date.Add(15 * time.Minute)
 
 	if comp.After(t) {
 		majConnexion(idSession)
-		login := getLogin(idSession)
-		return login
+		return c.login
 	} else {
 		RemoveConnection(idSession)
 		return ""
 	}
+}
+
+func IsConnectedLogin(login string) string {
+	db := database.Connect()
+	if db == nil {
+		return ""
+	}
+	idSession := ""
+	err := db.QueryRow("Select idSession From Connexion where login=?", login).Scan(&idSession)
+
+	if err != nil || idSession == "" {
+		return ""
+	}
+	return idSession
 
 }
 
-func getLogin(idSession string) string {
+//getLogin : plus utilisée car le login était dans c
+func _(idSession string) string {
 	db := database.Connect()
 	if db == nil {
 		return ""
