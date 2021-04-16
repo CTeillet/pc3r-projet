@@ -42,6 +42,7 @@ window.onload = function () {
                 if (jsonData["code"] === "200") {
                     idSession = jsonData["idSession"]
                     refreshMatchComing()
+                    refreshBet()
                 }
             });
     })
@@ -97,10 +98,9 @@ function refreshMatchComing() {
             return response.json();
         })
         .then(function (jsonData) {
-            // window.alert(jsonData["message"])
             if (jsonData["code"] === "200") {
                 let result = jsonData["result"];
-                clearPariEnCoursListe()
+                clearMatchAVenir()
                 for (var i = 0; i < result.length; i++) {
                     var li = document.createElement('li')
 
@@ -124,6 +124,10 @@ function refreshMatchComing() {
                 }
             }
         });
+}
+
+function refreshBet() {
+    clearPariEnCoursListe()
 }
 
 
