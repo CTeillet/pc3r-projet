@@ -132,6 +132,12 @@ func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "5000"
+		http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("../web"))))
+	} else {
+		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			http.Redirect(w, r, "/home", http.StatusSeeOther)
+		})
+
 	}
 	f, _ := os.Create("/var/log/golang/golang-server.log")
 
@@ -140,11 +146,7 @@ func main() {
 	updateComingMatches()
 	updateResultMatchesAndBet()
 
-	listFiles()
-
 	//http.HandleFunc("/", handleHome)
-
-	http.Handle("/", http.StripPrefix("/", http.FileServer(http.Dir("../web"))))
 
 	http.HandleFunc("/user", handleUser)
 	http.HandleFunc("/bet", handleBet)
@@ -165,7 +167,8 @@ func main() {
 	}
 }
 
-func listFiles() {
+//list files directory
+func _() {
 	var files []string
 
 	root := "../web"
