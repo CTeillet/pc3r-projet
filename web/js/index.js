@@ -9,6 +9,7 @@ let loginForm;
 let idSession = "";
 let pariEnCoursListe;
 let matchDisponibleListe;
+var matchDisponibleButton
 
 window.onload = function () {
     pariEnCours = document.getElementById("pariEnCours")
@@ -21,6 +22,7 @@ window.onload = function () {
     loginForm = document.getElementById("loginForm")
     pariEnCoursListe = document.getElementById("pariEnCoursListe")
     matchDisponibleListe = document.getElementById("matchDisponibleListe")
+    matchDisponibleButton = document.getElementById("matchDisponibleButton")
 
     loginForm.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -104,23 +106,103 @@ function refreshMatchComing() {
                 for (var i = 0; i < result.length; i++) {
                     var li = document.createElement('li')
 
-                    var equipeAButton = document.createElement("button")
-                    var equipeAText = document.createTextNode(result[i]["equipeA"])
-                    equipeAButton.appendChild(equipeAText)
+                    // var equipeAButton = document.createElement("button")
+                    //
+                    // var equipeAText = document.createTextNode(result[i]["equipeA"])
+                    // equipeAButton.appendChild(equipeAText)
+                    //
+                    // var coteContent = document.createTextNode(result[i]["cote"])
+                    // var equipeBButton = document.createElement("button")
+                    // var equipeBText = document.createTextNode(result[i]["equipeB"])
+                    // equipeBButton.appendChild(equipeBText)
+                    //
+                    // var dateMatch = document.createTextNode((result[i]["date"]))
+                    //
+                    // var champsMontant = document.createElement("input")
+                    // champsMontant.type="number"
+                    // champsMontant.value=0
+                    //
+                    // li.appendChild(equipeAButton)
+                    // li.appendChild(coteContent)
+                    // li.appendChild(equipeBButton)
+                    // li.appendChild(dateMatch)
+                    // li.appendChild(champsMontant)
+                    //
+                    // matchDisponibleListe.append(li)
 
-                    var coteContent = document.createTextNode(result[i]["cote"])
-                    var equipeBButton = document.createElement("button")
-                    var equipeBText = document.createTextNode(result[i]["equipeB"])
-                    equipeBButton.appendChild(equipeBText)
+                    var ul = document.createElement('ul')
 
-                    var dateMatch = document.createTextNode((result[i]["date"]))
+                    var sport = document.createTextNode("Sport : " + result[i]["sport"])
+                    var sportLi = document.createElement('li')
+                    sportLi.appendChild(sport)
 
-                    li.appendChild(equipeAButton)
-                    li.appendChild(coteContent)
-                    li.appendChild(equipeBButton)
-                    li.appendChild(dateMatch)
+                    var league = document.createTextNode("League : " + result[i]["league"])
+                    var leagueLi = document.createElement('li')
+                    leagueLi.appendChild(league)
 
+                    var date = document.createTextNode('Date : ' + result[i]["date"])
+                    var dateLi = document.createElement('li')
+                    dateLi.appendChild(date)
+
+                    var equipe = document.createTextNode(result[i]["equipeA"] + " vs " + result[i]["equipeB"])
+                    var equipeLi = document.createElement('li')
+                    equipeLi.appendChild(equipe)
+
+                    var cote = document.createTextNode("Cote : " +  result[i]["cote"])
+                    var coteLi = document.createElement('li')
+                    coteLi.appendChild(cote)
+
+                    var montant = document.createElement('input')
+                    var montantLi = document.createElement('li')
+                    var montantTxt = document.createTextNode("Montant ")
+                    montantLi.append(montantTxt, montant)
+                    montant.type= 'number'
+
+                    var vainqueurLi = document.createElement('li')
+
+                    var equipeARadio = document.createElement('input')
+                    equipeARadio.type='radio'
+                    equipeARadio.value=result[i]["equipeA"]
+                    equipeARadio.name='vainqueur'+result[i]["id"]
+                    equipeARadio.id='equipeA'+result[i]["id"]
+
+                    var equipeALabel = document.createElement('label')
+                    equipeALabel.htmlFor='equipeA'+result[i]["id"]
+
+                    var equipeALabelText = document.createTextNode(result[i]["equipeA"])
+
+                    equipeALabel.appendChild(equipeALabelText)
+
+                    var equipeBRadio = document.createElement('input')
+                    equipeBRadio.type='radio'
+                    equipeBRadio.value=result[i]["equipeB"]
+                    equipeBRadio.name='vainqueur'+result[i]["id"]
+                    equipeBRadio.id='equipeB'+result[i]["id"]
+
+                    var equipeBLabel = document.createElement('label')
+                    equipeALabel.htmlFor='equipeB'+result[i]["id"]
+
+                    var equipeBLabelText = document.createTextNode(result[i]["equipeB"])
+
+                    equipeBLabel.appendChild(equipeBLabelText)
+
+                    vainqueurLi.appendChild(equipeARadio)
+                    vainqueurLi.appendChild(equipeALabel)
+                    vainqueurLi.appendChild(equipeBRadio)
+                    vainqueurLi.appendChild(equipeBLabel)
+
+                    ul.appendChild(sportLi)
+                    ul.appendChild(leagueLi)
+                    ul.appendChild(dateLi)
+                    ul.appendChild(equipeLi)
+                    ul.appendChild(coteLi)
+                    ul.appendChild(montantLi)
+                    ul.appendChild(vainqueurLi)
+
+
+                    li.appendChild(ul)
                     matchDisponibleListe.append(li)
+
                 }
             }
         });

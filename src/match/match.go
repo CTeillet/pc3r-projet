@@ -44,9 +44,9 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 	var res *sql.Rows
 	var err error
 	if req == "" {
-		res, err = db.Query("Select * From `Match` where statut='not_started' and equipeA<>'' and equipeB<>'';")
+		res, err = db.Query("Select * From `Match` where statut='not_started' and equipeA<>'' and equipeB<>'' order by date;")
 	} else {
-		res, err = db.Query("Select * From Match where statut='not_started' and (sport=? or league=? or equipeA=? or equipeB=?);", req)
+		res, err = db.Query("Select * From Match where statut='not_started' and (sport=? or league=? or equipeA=? or equipeB=?) order by date;", req)
 	}
 
 	if err != nil {
