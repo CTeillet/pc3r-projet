@@ -59,10 +59,19 @@ div.form-example {
 }
 
 label, input {
-    display: table-cell;
+    /*display: table-cell;*/
     margin-bottom: 10px;
 }
 
 label {
     padding-right: 10px;
+}
+
+
+ol li ul{
+    margin: 50px;
+}
+
+ul li {
+    padding: 5px;
 }

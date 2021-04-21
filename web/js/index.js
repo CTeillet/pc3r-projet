@@ -106,30 +106,6 @@ function refreshMatchComing() {
                 for (var i = 0; i < result.length; i++) {
                     var li = document.createElement('li')
 
-                    // var equipeAButton = document.createElement("button")
-                    //
-                    // var equipeAText = document.createTextNode(result[i]["equipeA"])
-                    // equipeAButton.appendChild(equipeAText)
-                    //
-                    // var coteContent = document.createTextNode(result[i]["cote"])
-                    // var equipeBButton = document.createElement("button")
-                    // var equipeBText = document.createTextNode(result[i]["equipeB"])
-                    // equipeBButton.appendChild(equipeBText)
-                    //
-                    // var dateMatch = document.createTextNode((result[i]["date"]))
-                    //
-                    // var champsMontant = document.createElement("input")
-                    // champsMontant.type="number"
-                    // champsMontant.value=0
-                    //
-                    // li.appendChild(equipeAButton)
-                    // li.appendChild(coteContent)
-                    // li.appendChild(equipeBButton)
-                    // li.appendChild(dateMatch)
-                    // li.appendChild(champsMontant)
-                    //
-                    // matchDisponibleListe.append(li)
-
                     var ul = document.createElement('ul')
 
                     var sport = document.createTextNode("Sport : " + result[i]["sport"])
@@ -196,9 +172,8 @@ function refreshMatchComing() {
                     ul.appendChild(dateLi)
                     ul.appendChild(equipeLi)
                     ul.appendChild(coteLi)
-                    ul.appendChild(montantLi)
                     ul.appendChild(vainqueurLi)
-
+                    ul.appendChild(montantLi)
 
                     li.appendChild(ul)
                     matchDisponibleListe.append(li)
