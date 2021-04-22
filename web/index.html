@@ -61,21 +61,26 @@
 </header>
 
 
-<div class="pariEnCours" id="pariEnCours">
+<div id="pariEnCours">
     <h1>Pari en cours</h1>
+    <button onclick="refreshBet()">Refresh Actives Bets</button>
     <ol id="pariEnCoursListe">
     </ol>
 </div>
 
 
-<div class="matchDisponible" id="matchDisponible">
+<div id="matchDisponible">
     <h1>Match disponible</h1>
-    <form>
-        <button type="submit">Valider</button>
-        <ol id="matchDisponibleListe">
-        </ol>
-    </form>
+    <button onclick="refreshMatchComing()">Refresh Coming Matches</button>
+    <ol id="matchDisponibleListe">
+    </ol>
+</div>
 
+<div id="parisFinis">
+    <h1>Match disponible</h1>
+    <button onclick="refreshBetHistory()">Refresh Coming Matches</button>
+    <ol id="pariFinisListe">
+    </ol>
 </div>
 
 

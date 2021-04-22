@@ -1,5 +1,3 @@
-let pariEnCours;
-let matchDisponible;
 let registerModal;
 let loginModal;
 let loginBtn;
@@ -9,11 +7,10 @@ let loginForm;
 let idSession = "";
 let pariEnCoursListe;
 let matchDisponibleListe;
-var matchDisponibleButton
+let matchDisponibleButton;
+// let parisFinisListe;
 
 window.onload = function () {
-    pariEnCours = document.getElementById("pariEnCours")
-    matchDisponible = document.getElementById("matchDisponible")
     registerModal = document.getElementById("registerModal");
     loginModal = document.getElementById("loginModal");
     loginBtn = document.getElementById("loginBtn");
@@ -103,62 +100,69 @@ function refreshMatchComing() {
             if (jsonData["code"] === "200") {
                 let result = jsonData["result"];
                 clearMatchAVenir()
-                for (var i = 0; i < result.length; i++) {
-                    var li = document.createElement('li')
+                for (let i = 0; i < result.length; i++) {
+                    const form = document.createElement('form')
 
-                    var ul = document.createElement('ul')
+                    const submitButton = document.createElement('button')
+                    submitButton.type="submit"
 
-                    var sport = document.createTextNode("Sport : " + result[i]["sport"])
-                    var sportLi = document.createElement('li')
+                    submitButton.appendChild(document.createTextNode("Soumettre Pari"))
+
+                    const li = document.createElement('li');
+
+                    const ul = document.createElement('ul');
+
+                    const sport = document.createTextNode("Sport : " + result[i]["sport"]);
+                    const sportLi = document.createElement('li');
                     sportLi.appendChild(sport)
 
-                    var league = document.createTextNode("League : " + result[i]["league"])
-                    var leagueLi = document.createElement('li')
+                    const league = document.createTextNode("League : " + result[i]["league"]);
+                    const leagueLi = document.createElement('li');
                     leagueLi.appendChild(league)
 
-                    var date = document.createTextNode('Date : ' + result[i]["date"])
-                    var dateLi = document.createElement('li')
+                    const date = document.createTextNode('Date : ' + result[i]["date"]);
+                    const dateLi = document.createElement('li');
                     dateLi.appendChild(date)
 
-                    var equipe = document.createTextNode(result[i]["equipeA"] + " vs " + result[i]["equipeB"])
-                    var equipeLi = document.createElement('li')
+                    const equipe = document.createTextNode(result[i]["equipeA"] + " vs " + result[i]["equipeB"]);
+                    const equipeLi = document.createElement('li');
                     equipeLi.appendChild(equipe)
 
-                    var cote = document.createTextNode("Cote : " +  result[i]["cote"])
-                    var coteLi = document.createElement('li')
+                    const cote = document.createTextNode("Cote : " + result[i]["cote"]);
+                    const coteLi = document.createElement('li');
                     coteLi.appendChild(cote)
 
-                    var montant = document.createElement('input')
-                    var montantLi = document.createElement('li')
-                    var montantTxt = document.createTextNode("Montant ")
+                    const montant = document.createElement('input');
+                    const montantLi = document.createElement('li');
+                    const montantTxt = document.createTextNode("Montant ");
                     montantLi.append(montantTxt, montant)
                     montant.type= 'number'
 
-                    var vainqueurLi = document.createElement('li')
+                    const vainqueurLi = document.createElement('li');
 
-                    var equipeARadio = document.createElement('input')
+                    const equipeARadio = document.createElement('input');
                     equipeARadio.type='radio'
                     equipeARadio.value=result[i]["equipeA"]
                     equipeARadio.name='vainqueur'+result[i]["id"]
                     equipeARadio.id='equipeA'+result[i]["id"]
 
-                    var equipeALabel = document.createElement('label')
+                    const equipeALabel = document.createElement('label');
                     equipeALabel.htmlFor='equipeA'+result[i]["id"]
 
-                    var equipeALabelText = document.createTextNode(result[i]["equipeA"])
+                    const equipeALabelText = document.createTextNode(result[i]["equipeA"]);
 
                     equipeALabel.appendChild(equipeALabelText)
 
-                    var equipeBRadio = document.createElement('input')
+                    const equipeBRadio = document.createElement('input');
                     equipeBRadio.type='radio'
                     equipeBRadio.value=result[i]["equipeB"]
                     equipeBRadio.name='vainqueur'+result[i]["id"]
                     equipeBRadio.id='equipeB'+result[i]["id"]
 
-                    var equipeBLabel = document.createElement('label')
+                    const equipeBLabel = document.createElement('label');
                     equipeALabel.htmlFor='equipeB'+result[i]["id"]
 
-                    var equipeBLabelText = document.createTextNode(result[i]["equipeB"])
+                    const equipeBLabelText = document.createTextNode(result[i]["equipeB"]);
 
                     equipeBLabel.appendChild(equipeBLabelText)
 
@@ -175,7 +179,13 @@ function refreshMatchComing() {
                     ul.appendChild(vainqueurLi)
                     ul.appendChild(montantLi)
 
-                    li.appendChild(ul)
+                    // li.appendChild(ul)
+
+                    form.appendChild(ul)
+                    form.appendChild(submitButton)
+
+                    li.appendChild(form)
+
                     matchDisponibleListe.append(li)
 
                 }
@@ -204,4 +214,8 @@ function clearPariEnCoursListe() {
 
 function clearMatchAVenir() {
     document.getElementById("matchDisponibleListe").innerHTML = "";
+}
+
+function refreshBetHistory() {
+
 }
