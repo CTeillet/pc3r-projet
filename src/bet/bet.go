@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"gitlab.com/CTeillet/pc3r-projet/src/database"
 	"gitlab.com/CTeillet/pc3r-projet/src/match"
 	"gitlab.com/CTeillet/pc3r-projet/src/user"
@@ -71,28 +72,43 @@ func AddBet(w http.ResponseWriter, r *http.Request) {
 	idSession := r.FormValue("idSession")
 	idMatch := r.FormValue("idMatch")
 	equipeGagnante := r.FormValue("equipeGagnante")
-	cote, err := strconv.ParseFloat(r.FormValue("cote"), 32)
+	coteStr := r.FormValue("cote")
+	montantStr := r.FormValue("montant")
+
+	fmt.Printf("Cote : %v, Montant : %v, Vainqueur : %v, idMatch : %v, idSession : %v\n", coteStr, montantStr, equipeGagnante, idMatch, idSession)
+
+	cote, err := strconv.ParseFloat(coteStr, 32)
+
 	if err != nil {
-		utils.SendResponse(w, http.StatusForbidden, `{"message": "wrong value for cote"`)
+		utils.SendResponse(w, http.StatusForbidden, `{"message": "wrong value for cote"}`)
 	}
-	montant, err := strconv.ParseFloat(r.FormValue("montant"), 32)
+	montant64, err := strconv.ParseFloat(montantStr, 32)
 	if err != nil {
-		utils.SendResponse(w, http.StatusForbidden, `{"message": "wrong value for montant"`)
+		utils.SendResponse(w, http.StatusForbidden, `{"message": "wrong value for montant"}`)
 	}
+
+	montant := float32(montant64)
 
 	login := utils.IsConnectedIdSession(idSession)
 
 	if login == "" {
-		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"`)
+		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"}`)
 		return
 	}
 
-	testInsert := addBetSql(idMatch, equipeGagnante, float32(cote), float32(montant), login)
+	montantCompte := user.GetAccountMoney(login)
+
+	if montantCompte < montant {
+		utils.SendResponse(w, http.StatusForbidden, `{"message": "not enough coin"}`)
+		return
+	}
+
+	testInsert := addBetSql(idMatch, equipeGagnante, float32(cote), montant, login)
 
 	if !testInsert {
-		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"`)
+		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"}`)
 	} else {
-		user.AlterMoney(login, float32(montant))
+		user.AlterMoney(login, -montant)
 		utils.SendResponse(w, http.StatusOK, `{"message":"New bet created"}`)
 	}
 
@@ -104,14 +120,14 @@ func DeleteBet(w http.ResponseWriter, r *http.Request) {
 	login := utils.IsConnectedIdSession(idSession)
 
 	if login == "" {
-		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"`)
+		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"}`)
 		return
 	}
 
 	testInsert := removeBetSQL(idPari, login)
 
 	if !testInsert {
-		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"`)
+		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"}`)
 	} else {
 		utils.SendResponse(w, http.StatusOK, `{"message":"New user created"}`)
 	}

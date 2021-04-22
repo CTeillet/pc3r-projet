@@ -102,8 +102,10 @@ function refreshMatchComing() {
                 clearMatchAVenir()
                 for (let i = 0; i < result.length; i++) {
                     const form = document.createElement('form')
+                    form.name=result[i]["id"]
 
                     const submitButton = document.createElement('button')
+
                     submitButton.type="submit"
 
                     submitButton.appendChild(document.createTextNode("Soumettre Pari"))
@@ -138,6 +140,7 @@ function refreshMatchComing() {
                     montantLi.append(montantTxt, montant)
                     montant.type= 'number'
                     montant.value=0
+                    montant.min=0
 
                     const vainqueurLi = document.createElement('li');
 
@@ -180,14 +183,44 @@ function refreshMatchComing() {
                     ul.appendChild(vainqueurLi)
                     ul.appendChild(montantLi)
 
-                    // li.appendChild(ul)
-
                     form.appendChild(ul)
                     form.appendChild(submitButton)
 
                     li.appendChild(form)
 
                     matchDisponibleListe.append(li)
+
+                    submitButton.onclick=function (event){
+                        event.preventDefault()
+                        let idMatch = event.target.form.name
+                        let vainqueur = document.querySelector('input[name="vainqueur'+idMatch+'"]:checked').value;
+                        if (montant.value!==0 && vainqueur!=="" ){
+                            params = new URLSearchParams()
+                            console.log("Montant : " + montant.value)
+                            console.log("Cote : " + result[i]["cote"])
+                            params.append("idSession", idSession)
+                            params.append("idMatch", idMatch)
+                            params.append("equipeGagnante", vainqueur)
+                            params.append("cote", result[i]["cote"])
+                            params.append("montant", montant.value)
+
+                            fetch("/bet", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                                    'Accept': 'application/json'
+                                },
+                                body: params
+                            })
+                                .then(function (response) {
+                                    console.log(response)
+                                    return response.json()
+                                })
+                                .then(function (jsonData) {
+                                    window.alert(jsonData["message"])
+                                })
+                        }
+                    }
 
                 }
             }
@@ -196,6 +229,7 @@ function refreshMatchComing() {
 
 function refreshBet() {
     clearPariEnCoursListe()
+
 }
 
 

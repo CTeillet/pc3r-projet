@@ -175,3 +175,11 @@ func AlterMoney(loginUser string, amount float32) bool {
 	}
 	return true
 }
+
+func GetAccountMoney(login string) float32 {
+	u := searchUser(login)
+	if u == nil {
+		return -1
+	}
+	return u.cagnotte
+}
