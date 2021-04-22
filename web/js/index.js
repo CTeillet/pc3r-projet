@@ -137,6 +137,7 @@ function refreshMatchComing() {
                     const montantTxt = document.createTextNode("Montant ");
                     montantLi.append(montantTxt, montant)
                     montant.type= 'number'
+                    montant.value=0
 
                     const vainqueurLi = document.createElement('li');
 
