@@ -15,54 +15,66 @@ import (
 )
 
 type Bet struct {
-	id             int
-	idMatch        int
-	equipeGagnante string
-	cote           float32
-	montant        float32
-	login          string
-	resultat       string
-	date           time.Time
+	Id             int       `json:"id"`
+	IdMatch        int       `json:"idMatch"`
+	EquipeGagnante string    `json:"equipeGagnante"`
+	Cote           float32   `json:"cote"`
+	Montant        float32   `json:"montant"`
+	Login          string    `json:"login"`
+	Resultat       string    `json:"resultat"`
+	Date           time.Time `json:"date"`
 }
 
 func GetBet(w http.ResponseWriter, r *http.Request) {
 	idSession := r.FormValue("idSession")
+	statutParis := r.FormValue("statutParis")
 
 	login := utils.IsConnectedIdSession(idSession)
 	if login == "" {
-		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"`)
+		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"}`)
 		return
 	}
 
 	db := database.Connect()
 	if db == nil {
-		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"`)
+		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"}`)
 		return
 	}
 
-	res, err := db.Query("Select * From `projet-pc3r`.`Pari` where login=?;", login)
-	if err != nil {
-		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"`)
-		return
+	var res *sql.Rows
+	var err error
+	if statutParis == "coming" {
+		res, err = db.Query("Select * From `projet-pc3r`.`Pari` where login=? and resultat='coming';", login)
+		if err != nil {
+			utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"}`)
+			return
+		}
+	} else {
+		res, err = db.Query("Select * From `projet-pc3r`.`Pari` where login=? and resultat<>'coming';", login)
+		if err != nil {
+			utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"}`)
+			return
+		}
 	}
+
 	err = db.Close()
 	if err != nil {
-		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"`)
+		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"}`)
 		return
 	}
 	resultat := make([]Bet, 0)
 	for res.Next() {
 		b := Bet{}
-		err := res.Scan(&b.id, &b.equipeGagnante, &b.cote, &b.montant, &b.login, &b.resultat, &b.date)
+		err := res.Scan(&b.Id, &b.IdMatch, &b.EquipeGagnante, &b.Cote, &b.Montant, &b.Login, &b.Resultat, &b.Date)
 		if err != nil {
-			utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem reading result request"`)
+			utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem reading result request"}`)
 			return
 		}
 		resultat = append(resultat, b)
 	}
 	resultJSON, err := json.Marshal(resultat)
 	if err != nil {
-		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem creation of JSON"`)
+		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem creation of JSON"}`)
 		return
 	}
 	utils.SendResponse(w, http.StatusOK, `{"message": "request effected", "result":`+string(resultJSON)+"}")
@@ -176,19 +188,19 @@ func UpdateResult1Hour() {
 	}
 	for res.Next() {
 		b := Bet{}
-		err := res.Scan(&b.id, &b.idMatch, &b.equipeGagnante, &b.cote, &b.montant, &b.login, &b.resultat, &b.date)
+		err := res.Scan(&b.Id, &b.IdMatch, &b.EquipeGagnante, &b.Cote, &b.Montant, &b.Login, &b.Resultat, &b.Date)
 
 		if err != nil {
 			return
 		}
 
 		var r sql.Result
-		win := match.WinnerIdMatch(b.idMatch)
-		if b.equipeGagnante == win {
-			user.AlterMoney(b.login, b.montant*b.cote)
-			r, err = db.Exec("Update Pari set resultat='win' where id=?", b.id)
+		win := match.WinnerIdMatch(b.IdMatch)
+		if b.EquipeGagnante == win {
+			user.AlterMoney(b.Login, b.Montant*b.Cote)
+			r, err = db.Exec("Update Pari set resultat='win' where id=?", b.Id)
 		} else {
-			r, err = db.Exec("Update Pari set resultat='loose' where id=?", b.id)
+			r, err = db.Exec("Update Pari set resultat='loose' where id=?", b.Id)
 		}
 		if err != nil {
 			return

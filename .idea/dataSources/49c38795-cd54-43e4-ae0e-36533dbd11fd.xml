@@ -1059,6 +1059,7 @@
       <Position>1</Position>
       <DataType>int(5)|0s</DataType>
       <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
     </column>
     <column id="337" parent="332" name="login">
       <Position>2</Position>

@@ -40,8 +40,8 @@ window.onload = function () {
                 window.alert(jsonData["message"])
                 if (jsonData["code"] === "200") {
                     idSession = jsonData["idSession"]
-                    refreshMatchComing()
-                    refreshBet()
+                    //refreshMatchComing()
+                    //refreshActiveBet()
                 }
             });
     })
@@ -98,8 +98,8 @@ function refreshMatchComing() {
         })
         .then(function (jsonData) {
             if (jsonData["code"] === "200") {
-                let result = jsonData["result"];
                 clearMatchAVenir()
+                let result = jsonData["result"];
                 for (let i = 0; i < result.length; i++) {
                     const form = document.createElement('form')
                     form.name=result[i]["id"]
@@ -227,10 +227,55 @@ function refreshMatchComing() {
         });
 }
 
-function refreshBet() {
-    clearPariEnCoursListe()
+function refreshActiveBet() {
+    getBet("coming", "pariEnCoursListe")
 
 }
+
+function refreshBetHistory() {
+    getBet("","pariFinisListe")
+}
+
+function getBet(statut, champ) {
+    let params = new URLSearchParams()
+    params.append("idSession", idSession)
+    params.append("statutParis", statut)
+    fetch("/bet?" + params.toString())
+        .then(function (response) {
+            return response.json()
+        })
+        .then(function (jsonData) {
+            console.log(jsonData["message"])
+            if (jsonData["code"] === "200") {
+                clearChamp(champ)
+                let result = jsonData["result"]
+                for (let i = 0; i < result.length; i++) {
+
+                    const li = document.createElement('li')
+
+                    const ul = document.createElement('ul')
+
+                    Object.keys(result[i]).forEach(function (key) {
+                        var value = result[i][key]
+
+                        let liUl = document.createElement('li')
+
+                        let texte = document.createTextNode(key + " : " + value)
+
+                        liUl.appendChild(texte)
+
+                        ul.appendChild(liUl)
+                    })
+
+                    li.appendChild(ul)
+
+                    document.getElementById(champ).append(li)
+                }
+            }
+        })
+}
+
+
 
 
 window.onclick = function (event) {
@@ -243,14 +288,10 @@ window.onclick = function (event) {
     }
 }
 
-function clearPariEnCoursListe() {
-    document.getElementById("pariEnCoursListe").innerHTML = "";
-}
-
 function clearMatchAVenir() {
     document.getElementById("matchDisponibleListe").innerHTML = "";
 }
 
-function refreshBetHistory() {
-
+function clearChamp(champ){
+    document.getElementById(champ).innerHTML = "";
 }
