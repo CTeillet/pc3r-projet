@@ -99,6 +99,7 @@ ul li {
 .content {
   padding: 0 18px;
   display: none;
-  overflow: hidden;
+    max-height: 500px;
+  overflow: scroll;
   background-color: #f1f1f1;
 } 
