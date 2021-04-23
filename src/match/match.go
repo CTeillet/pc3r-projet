@@ -171,9 +171,9 @@ func addMulipleMatch(data utils.MatchJSON) {
 		//time.Sleep(150*time.Millisecond)
 		//fmt.Println(v)
 		if len(v.Opponents) == 2 {
-			addMatch(v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Status, v.Winner.Acronym, v.BeginAt)
+			addMatch(v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Status, v.Winner.Acronym, v.OriginalScheduledAt)
 		} else {
-			addMatch(v.Videogame.Name, v.League.Name, "", "", v.Status, "", v.BeginAt)
+			addMatch(v.Videogame.Name, v.League.Name, "", "", v.Status, "", v.OriginalScheduledAt)
 		}
 	}
 }
@@ -252,13 +252,15 @@ func JSONMatchUpdate(resp *http.Response) {
 func updateMulipleMatch(data utils.MatchJSON) {
 	for _, v := range data {
 		if len(v.Opponents) == 2 {
-			updateMatch(v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Winner.Acronym, v.ScheduledAt, v.Status)
+			//fmt.Printf("Sport :%v , League :%v ,  OppentsA : %v, OpponentsB : %v, vainqueur : %v, date : %v, statut : %v\n", v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Winner.Acronym, v.ScheduledAt, v.Status)
+			updateMatch(v.Videogame.Name, v.League.Name, v.Opponents[0].Opponent.Acronym, v.Opponents[1].Opponent.Acronym, v.Winner.Acronym, v.OriginalScheduledAt, v.Status)
 		}
 	}
 }
 
 func updateMatch(sport string, league string, equipeA string, equipeB string, winner string, date time.Time, statut string) {
 	db := database.Connect()
+
 	_, err := db.Exec("Update `projet-pc3r`.`Match` SET `vainqueur`=? , `statut`=? where sport=? and league=? and equipeA=? and equipeB=? and `date`=? and statut='not_started';", winner, statut, sport, league, equipeA, equipeB, date)
 	if err != nil {
 		panic(err.Error())
