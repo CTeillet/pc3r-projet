@@ -62,25 +62,32 @@
 
 
 <div id="pariEnCours">
-    <h1>Pari en cours</h1>
-    <button onclick="refreshActiveBet()">Refresh Actives Bets</button>
-    <ol id="pariEnCoursListe">
-    </ol>
+    <button type="button" class="collapsible">Pari en cours</button>
+    <div class="content">
+        <button onclick="refreshActiveBet()">Refresh Actives Bets</button>
+        <ol id="pariEnCoursListe">
+        </ol>
+    </div>
 </div>
 
 
 <div id="matchDisponible">
-    <h1>Match disponible</h1>
-    <button onclick="refreshMatchComing()">Refresh Coming Matches</button>
-    <ol id="matchDisponibleListe">
-    </ol>
+    <button type="button" class="collapsible">Match disponible</button>
+    <div class="content">
+        <button onclick="refreshMatchComing()">Refresh Coming Matches</button>
+        <ol id="matchDisponibleListe">
+        </ol>
+    </div>
+    
 </div>
 
 <div id="parisFinis">
-    <h1>Paris terminés</h1>
-    <button onclick="refreshBetHistory()">Refresh Coming Matches</button>
-    <ol id="pariFinisListe">
-    </ol>
+    <button type="button" class="collapsible">Paris terminés</button>
+    <div class="content">
+        <button onclick="refreshBetHistory()">Refresh Coming Matches</button>
+        <ol id="pariFinisListe">
+        </ol>
+    </div>
 </div>
 
 
