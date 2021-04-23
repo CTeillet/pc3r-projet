@@ -26,18 +26,18 @@ type Match struct {
 }
 
 func GetMatch(w http.ResponseWriter, r *http.Request) {
-	req := r.FormValue("login")
+	req := r.FormValue("req")
 	idSession := r.FormValue("idSession")
 
 	login := utils.IsConnectedIdSession(idSession)
 	if login == "" {
-		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"`)
+		utils.SendResponse(w, http.StatusForbidden, `{"message": "user not connected"}`)
 		return
 	}
 
 	db := database.Connect()
 	if db == nil {
-		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"`)
+		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with connection to database"}`)
 		return
 	}
 
@@ -46,16 +46,16 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 	if req == "" {
 		res, err = db.Query("Select * From `Match` where statut='not_started' and equipeA<>'' and equipeB<>'' order by date;")
 	} else {
-		res, err = db.Query("Select * From Match where statut='not_started' and (sport=? or league=? or equipeA=? or equipeB=?) order by date;", req)
+		res, err = db.Query("Select * From `Match` where statut='not_started' and (sport=? or league=? or equipeA=? or equipeB=?) order by date;", req, req, req, req)
 	}
 
 	if err != nil {
-		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"`)
+		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with searching database"}`)
 		return
 	}
 	err = db.Close()
 	if err != nil {
-		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with database"`)
+		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem with closing database"}`)
 		return
 	}
 	resultat := make([]Match, 0)
@@ -63,14 +63,14 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 		m := Match{}
 		err := res.Scan(&m.Id, &m.Sport, &m.League, &m.EquipeA, &m.EquipeB, &m.Cote, &m.Statut, &m.Vainqueur, &m.Date)
 		if err != nil {
-			utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem reading result request"`)
+			utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem reading result request"}`)
 			return
 		}
 		resultat = append(resultat, m)
 	}
 	resultJSON, err := json.Marshal(resultat)
 	if err != nil {
-		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem creation of JSON"`)
+		utils.SendResponse(w, http.StatusInternalServerError, `{"message": "problem creation of JSON"}`)
 		return
 	}
 	utils.SendResponse(w, http.StatusOK, `{"message": "coming matches", "result":`+string(resultJSON)+"}")

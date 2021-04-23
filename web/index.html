@@ -12,6 +12,17 @@
     <img src="img/logo.png" alt="logo">
     <button class="boutonIdentification" id="loginBtn">Connexion</button>
     <button class="boutonIdentification" id="registerBtn">Inscription</button>
+    <button class="boutonDeconnexion" id="disconnectBtn">Deconnexion</button>
+    <label class="montantCompte" id="montantCompte">Montant compte : </label>
+    <div class="boutonIdentification">
+        <input type="search" id="site-search" name="searchInput"
+               aria-label="Cherche parmi les matchs à venir"
+               placeholder="Cherche parmi les matchs à venir">
+
+        <button id="searchBtn">Search</button>
+    </div>
+
+
     <!-- The Modal -->
     <div id="loginModal" class="modal">
 
@@ -60,34 +71,44 @@
 
 </header>
 
-
-<div id="pariEnCours">
-    <button type="button" class="collapsible">Pari en cours</button>
-    <div class="content">
-        <button onclick="refreshActiveBet()">Refresh Actives Bets</button>
-        <ol id="pariEnCoursListe">
-        </ol>
+<div id="main" class="acceuil">
+    <div id="pariEnCours">
+        <button type="button" class="collapsible">Pari en cours</button>
+        <div class="content">
+            <button onclick="refreshActiveBet()">Refresh Actives Bets</button>
+            <ol id="pariEnCoursListe">
+            </ol>
+        </div>
     </div>
+
+
+    <div id="matchDisponible">
+        <button type="button" class="collapsible">Match disponible</button>
+        <div class="content">
+            <button onclick="refreshMatchComing()">Refresh Coming Matches</button>
+            <ol id="matchDisponibleListe">
+            </ol>
+        </div>
+
+    </div>
+
+    <div id="parisFinis">
+        <button type="button" class="collapsible">Paris terminés</button>
+        <div class="content">
+            <button onclick="refreshBetHistory()">Refresh Coming Matches</button>
+            <ol id="pariFinisListe">
+            </ol>
+        </div>
+    </div>
+
 </div>
 
 
-<div id="matchDisponible">
-    <button type="button" class="collapsible">Match disponible</button>
-    <div class="content">
-        <button onclick="refreshMatchComing()">Refresh Coming Matches</button>
-        <ol id="matchDisponibleListe">
-        </ol>
-    </div>
-    
-</div>
-
-<div id="parisFinis">
-    <button type="button" class="collapsible">Paris terminés</button>
-    <div class="content">
-        <button onclick="refreshBetHistory()">Refresh Coming Matches</button>
-        <ol id="pariFinisListe">
-        </ol>
-    </div>
+<div id="resultSearch" class="resultatRecherche">
+    <h1>Resultat recherche</h1>
+    <button type="button" id="acceuil">Retour Acceuil</button>
+    <ol id="resultatRechercheListe">
+    </ol>
 </div>
 
 
