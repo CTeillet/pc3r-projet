@@ -2,7 +2,7 @@
 # Stops the process if something fails
 sudo rm /var/app/current/go.*
 
-cd src
+cd src || exit
 
 # get all of the dependencies needed
 go get -d ./...

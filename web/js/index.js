@@ -77,7 +77,7 @@ window.onload = function () {
 
                     document.getElementById("main").style.display='none'
 
-                    var resultatListe = document.getElementById('resultatRechercheListe')
+                    const resultatListe = document.getElementById('resultatRechercheListe');
 
                     window.location.hash="#search"
 
@@ -417,7 +417,6 @@ function refreshMatchComing() {
                                 })
                         }
                     }
-
                 }
             }else{
                 alert(jsonData["message"])
@@ -454,7 +453,7 @@ function getBet(statut, champ) {
                     const ul = document.createElement('ul')
 
                     Object.keys(result[i]).forEach(function (key) {
-                        var value = result[i][key]
+                        const value = result[i][key];
 
                         let liUl = document.createElement('li')
 
@@ -494,13 +493,13 @@ function clearChamp(champ){
 }
 
 function collapse() {
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
+    const coll = document.getElementsByClassName("collapsible");
+    let i;
 
     for (i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function() {
             this.classList.toggle("active");
-            var content = this.nextElementSibling;
+            const content = this.nextElementSibling;
             if (content.style.display === "block") {
             content.style.display = "none";
             } else {
@@ -517,7 +516,7 @@ function changeUserMoney(){
         .then(res => res.json()
         )
         .then(function (jsonData) {
-            cagnotte = Number.parseFloat(jsonData["cagnotte"]).toFixed(2)
+            let cagnotte = Number.parseFloat(jsonData["cagnotte"]).toFixed(2)
             document.getElementById("montantCompte").innerText="Montant compte : " + cagnotte
         })
 }
