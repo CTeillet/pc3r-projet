@@ -22,6 +22,8 @@ window.onload = function () {
 
     loginForm.addEventListener('submit', function (event) {
         event.preventDefault();
+        window.location.hash="#home"
+
         let formData = new FormData(event.target);
         console.log(formData)
         fetch('/connexion', {
@@ -56,7 +58,9 @@ window.onload = function () {
             });
     })
 
-    document.getElementById("acceuil").onclick=function () {
+    document.getElementById("accueil").onclick=function () {
+        window.location.hash="#home"
+
         document.getElementById("main").style.display='block'
         document.getElementById("resultSearch").style.display='none'
     }
@@ -75,7 +79,10 @@ window.onload = function () {
 
                     var resultatListe = document.getElementById('resultatRechercheListe')
 
+                    window.location.hash="#search"
+
                     resultatListe.innerHTML = ""
+
 
                     let result = jsonData["result"]
 
@@ -513,5 +520,27 @@ function changeUserMoney(){
             cagnotte = Number.parseFloat(jsonData["cagnotte"]).toFixed(2)
             document.getElementById("montantCompte").innerText="Montant compte : " + cagnotte
         })
+}
 
+window.onpopstate = function() {
+    switch(location.hash) {
+        case '#home':
+            backFromHome()
+            break
+        case '#search':
+            backFromSearch()
+            break
+        default:
+            // defaultBackAnimation()
+    }
+}
+
+function backFromHome() {
+    document.getElementById("main").style.display="block"
+    document.getElementById("resultSearch").style.display="none"
+}
+
+function backFromSearch() {
+    document.getElementById("main").style.display="none"
+    document.getElementById("resultSearch").style.display="block"
 }
