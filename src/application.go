@@ -157,6 +157,7 @@ func main() {
 
 	log.Printf("Listening on port %s\n\n", port)
 	err := http.ListenAndServe(":"+port, nil)
+
 	if err != nil {
 		panic(err.Error())
 	}

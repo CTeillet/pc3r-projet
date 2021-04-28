@@ -143,7 +143,6 @@ func LoadComingMatchFor2Week() {
 		panic(err)
 	}
 	max, err := strconv.Atoi(q.Get("page"))
-	//fmt.Println(max)
 	if err != nil {
 		max = 0
 	}
@@ -163,7 +162,7 @@ func JSONMatch2SQL(resp *http.Response) {
 	if err != nil {
 		panic(err.Error())
 	}
-	addMulipleMatch(data)
+	go addMulipleMatch(data)
 }
 
 func addMulipleMatch(data utils.MatchJSON) {
@@ -179,15 +178,16 @@ func addMulipleMatch(data utils.MatchJSON) {
 }
 
 func addMatch(sport string, league string, equipeA string, equipeB string, statut string, winner string, date time.Time) {
+	cote := calculCote(equipeA, equipeA)
+	//cote := 1
 	db := database.Connect()
-	//_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, 1.0, ?, ?, ?);", sport, league, equipeA, equipeB, statut, winner, date)
 	//fmt.Printf("Update `Match` set equipeA=%v , equipeB=%v , vainqueur=%v , statut=%v where sport=%v and league=%v and equipeA='' and equipeB='' and date=%v ;\n", equipeA, equipeB, winner, statut, sport, league, date)
-	r, err := db.Exec("Update `Match` set equipeA=? , equipeB=? , vainqueur=? , statut=? where sport=? and league=? and equipeA='' and equipeB='' and date=? ;", equipeA, equipeB, winner, statut, sport, league, date)
+	r, err := db.Exec("Update `Match` set equipeA=? , equipeB=? , vainqueur=? , statut=? , cote ? where sport=? and league=? and equipeA='' and equipeB='' and date=? ;", equipeA, equipeB, winner, statut, cote, sport, league, date)
 	if err == nil {
 		nbRows, err2 := r.RowsAffected()
 		if err2 != nil || nbRows != 1 {
 			//fmt.Println(err.Error())
-			_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, 1.0, ?, ?, ?);", sport, league, equipeA, equipeB, statut, winner, date)
+			_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", sport, league, equipeA, equipeB, cote, statut, winner, date)
 			if err != nil {
 				if !strings.Contains(err.Error(), "Duplicate") {
 					panic(err.Error())
@@ -263,9 +263,13 @@ func updateMatch(sport string, league string, equipeA string, equipeB string, wi
 
 	_, err := db.Exec("Update `projet-pc3r`.`Match` SET `vainqueur`=? , `statut`=? where sport=? and league=? and equipeA=? and equipeB=? and `date`=? and statut='not_started';", winner, statut, sport, league, equipeA, equipeB, date)
 	if err != nil {
+		//fmt.Println(err.Error())
 		panic(err.Error())
 	}
 	err = db.Close()
+	if err != nil {
+		return
+	}
 }
 
 func WinnerIdMatch(idMatch int) string {
@@ -278,6 +282,87 @@ func WinnerIdMatch(idMatch int) string {
 	if err != nil {
 		panic(err.Error())
 	}
+	err = db.Close()
+	if err != nil {
+		return ""
+	}
 	return m.Vainqueur
+}
 
+//Calcul Cote
+func calculCote(equipeA string, equipeB string) float32 {
+	if equipeA == "" || equipeB == "" {
+		return 1
+	}
+	nbMatchTotal := nbMatchTotal(equipeA, equipeB)
+	if nbMatchTotal == -1 {
+		return 1
+	}
+	nbMatchGagneA := nbMatchGagne(equipeA, equipeB)
+	if nbMatchGagneA == -1 {
+		return 1
+	}
+	nbMatchGagne5DerniersA := nbMatchGagne5Derniers(equipeA, equipeB)
+	if nbMatchGagne5DerniersA == -1 {
+		return 1
+	}
+
+	pourcentageVictoireTotale := (float32(nbMatchGagneA)/float32(nbMatchTotal))/2 + (float32(nbMatchGagne5DerniersA)/5)/2
+	return 100 / pourcentageVictoireTotale
+}
+
+func nbMatchGagne(equipeA string, equipeB string) int {
+	db := database.Connect()
+	if db == nil {
+		return -1
+	}
+	res := 0
+	err := db.QueryRow("Select Count(*) From  `projet-pc3r`.`Match` where  (equipeA=? or equipeA=?) and (equipeB=? or equipeB=?) and vainqueur=?;", equipeA, equipeB, equipeA, equipeB, equipeA).Scan(&res)
+	if err != nil {
+		//fmt.Println(err.Error())
+		panic(err.Error())
+	}
+	err = db.Close()
+	if err != nil {
+		return -1
+	}
+
+	return res
+}
+
+func nbMatchTotal(equipeA string, equipeB string) int {
+	db := database.Connect()
+	if db == nil {
+		return -1
+	}
+	res := 0
+	err := db.QueryRow("Select Count(*) From  `projet-pc3r`.`Match` where (equipeA=? or equipeA=?) and (equipeB=? or equipeB=?);", equipeA, equipeB, equipeA, equipeB).Scan(&res)
+	if err != nil {
+		//fmt.Println(err.Error())
+		panic(err.Error())
+	}
+	err = db.Close()
+	if err != nil {
+		return -1
+	}
+	return res
+}
+
+func nbMatchGagne5Derniers(equipeA string, equipeB string) int {
+	db := database.Connect()
+	if db == nil {
+		return -1
+	}
+	res := 0
+	err := db.QueryRow("Select Count(*) From (Select * From `Match` where (equipeA=? or equipeA=?) and (equipeB=? or equipeB=?) order by date DESC LIMIT 5 ) as `M*` where vainqueur=?;", equipeA, equipeB, equipeA, equipeB, equipeA).Scan(&res)
+	if err != nil {
+		//fmt.Println(err.Error())
+		panic(err.Error())
+	}
+	err = db.Close()
+	if err != nil {
+		return -1
+	}
+
+	return res
 }

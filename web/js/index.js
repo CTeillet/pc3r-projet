@@ -326,9 +326,16 @@ function refreshMatchComing() {
                     const equipeLi = document.createElement('li');
                     equipeLi.appendChild(equipe)
 
-                    const cote = document.createTextNode("Cote : " + result[i]["cote"]);
-                    const coteLi = document.createElement('li');
-                    coteLi.appendChild(cote)
+                    let coteA = result[i]["cote"]
+                    let coteB = 100/coteA
+
+                    const cotePourA = document.createTextNode("Cote pour l'équipe " + result[i]["equipeA"]+" : " + coteA);
+                    const coteLiA = document.createElement('li');
+                    coteLiA.appendChild(cotePourA)
+
+                    const cotePourB = document.createTextNode("Cote pour l'équipe " + result[i]["equipeB"]+" : " + coteB);
+                    const coteLiB = document.createElement('li');
+                    coteLiB.appendChild(cotePourB)
 
                     const montant = document.createElement('input');
                     const montantLi = document.createElement('li');
@@ -375,7 +382,8 @@ function refreshMatchComing() {
                     ul.appendChild(leagueLi)
                     ul.appendChild(dateLi)
                     ul.appendChild(equipeLi)
-                    ul.appendChild(coteLi)
+                    ul.appendChild(coteLiA)
+                    ul.appendChild(coteLiB)
                     ul.appendChild(vainqueurLi)
                     ul.appendChild(montantLi)
 
