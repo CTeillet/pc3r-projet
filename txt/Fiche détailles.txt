@@ -3,11 +3,10 @@ Cas d'utilisation
 - Pierre se connecte. Une page d'accueil lui suggère des paris.
   Il en choisit un, les caractéristiques du paris (date, cotes, les equipes, ...)
   Il choisit l'équipe ainsi que la somme de G-Coins à miser.
-  UN écran lui demandant s'il est sûr s'affiche.
-  Il appuie sur oui, et un message de confirmation s'affiche.
+  Il valide son pari
 
 - Bob se connecte et arrive sur la page d'accueil.
-  Il y a une colonne montrant les matchs sur lesquels il a parier.
+  Il y a une liste lui montrant les matchs sur lesquels il a parié.
   Il clique sur l'un des paris, un écran s'affiche montrant les caractéristiques du paris
   ainsi que le montant parier et l'équipe.
 
@@ -15,8 +14,9 @@ Cas d'utilisation
   Elle rentre son nom, son mail, un mot de passe, un pseudo et clique sur valider.
   Un écran s'affiche lui disant que son compte a été créé.
 
+//Pour l'instant peut pas le faire
 - Paul se connecte et arrive sur la page d'accueil.
-  Il clique sur un paris dans la colonne avec les match sur lesquels il a parié.
+  Il clique sur un pari dans la colonne avec les matchs sur lesquels il a parié.
   Il peut le supprime.
   Un message de confirmation s'affiche, il clique sur OUI.
   Un message de validation s'affiche
@@ -24,23 +24,12 @@ Cas d'utilisation
 - Jacques se connecte et arrive sur la page d'accueil.
   Il rentre le nom d'une équipe dans le champ de recherche et les paris disponibles s'affiche.
   Il choisit l'équipe ainsi que la somme de G-Coins à miser.
-  UN écran lui demandant s'il est sûr s'affiche.
-  Il appuie sur oui, et un message de confirmation s'affiche.
+  Il valide son pari
 
 - Michel se connecte pour la première fois de la journée.
-  Un message s'affiche lui disant qu'il a obtenu une résompense quotidienne de G-Coins.
-  Il clique sur le bouton et obtient un montant aléatoiree de G-coins en plus dans son inventaire.
+  Un message s'affiche lui disant qu'il a obtenu une récompense quotidienne de G-Coins.
+  Il clique sur le bouton et obtient un montant aléatoire de G-coins en plus dans son inventaire.
 
-- Juliette se connecte.
-   Elle choisit l'option paramètres utilisateurs.
-   Elle clique sur le bouton supprimmer compte.
-   Une fenetre s'affiche lui demandant de confirmer en rentrant son mot de passe.
-   Elle rentre son mot de passe et appuie sur valider.
-
-- Anne se connecte.
-  Elle clique sur un match disponible.
-  La conversation du paris s'affiche.
-  Elle rentre un message pour réagir à la conversation.
 
 Fonctionnalités
 - compte utilisateur
@@ -61,7 +50,7 @@ DELETE .. . .. . . -> supprimmer un utilisateur
 POST login motDePasse -> connexion
 DELETE login          -> deconnexion
 
--Paris
+-Pari
 GET idUtilisateur -> obtenir la liste des paris pour un utilisateur
 GET idPari        -> obtenir le pari
 POST idMatch idEquipe montant -> ajouter un pari
@@ -80,5 +69,5 @@ GET idUtilisateur  -> obtenir le nombre de G-coins de l'utilisateur
 POST idUtilisateur -> obtenir récompense quotidienne
 
 Base de données
-MySQL -> match, paris, connexion, utilisateur
+MySQL -> match, pari, connexion, utilisateur
 
