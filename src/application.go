@@ -6,7 +6,6 @@ import (
 	"gitlab.com/CTeillet/pc3r-projet/src/coins"
 	"gitlab.com/CTeillet/pc3r-projet/src/connexion"
 	"gitlab.com/CTeillet/pc3r-projet/src/match"
-	"gitlab.com/CTeillet/pc3r-projet/src/message"
 	"gitlab.com/CTeillet/pc3r-projet/src/user"
 	"gitlab.com/CTeillet/pc3r-projet/src/utils"
 	"log"
@@ -98,24 +97,6 @@ func handleCoins(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func handleMessage(w http.ResponseWriter, r *http.Request) {
-	err := r.ParseForm()
-	log.Printf("Message\n")
-	if err != nil {
-		handleProblem(w, r)
-	}
-	switch r.Method {
-	case "GET":
-		message.GetMessage(w, r)
-	case "POST":
-		message.PostMessage(w, r)
-	case "DELETE":
-		message.DeleteMessage(w, r)
-	default:
-		handleProblem(w, r)
-	}
-}
-
 //HandleHome
 func _(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Welcome\n")
@@ -153,7 +134,6 @@ func main() {
 	http.HandleFunc("/match", handleMatch)
 	http.HandleFunc("/connexion", handleConnexion)
 	http.HandleFunc("/coins", handleCoins)
-	http.HandleFunc("/message", handleMessage)
 
 	log.Printf("Listening on port %s\n\n", port)
 	err := http.ListenAndServe(":"+port, nil)

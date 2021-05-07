@@ -1,12 +1,12 @@
 Cas d'utilisation
 
-- Pierre se connecte. Une page d'acceuil lui sugère des paris.
+- Pierre se connecte. Une page d'accueil lui suggère des paris.
   Il en choisit un, les caractéristiques du paris (date, cotes, les equipes, ...)
   Il choisit l'équipe ainsi que la somme de G-Coins à miser.
   UN écran lui demandant s'il est sûr s'affiche.
   Il appuie sur oui, et un message de confirmation s'affiche.
 
-- Bob se connecte et arrive sur la page d'acceuil.
+- Bob se connecte et arrive sur la page d'accueil.
   Il y a une colonne montrant les matchs sur lesquels il a parier.
   Il clique sur l'un des paris, un écran s'affiche montrant les caractéristiques du paris
   ainsi que le montant parier et l'équipe.
@@ -15,13 +15,13 @@ Cas d'utilisation
   Elle rentre son nom, son mail, un mot de passe, un pseudo et clique sur valider.
   Un écran s'affiche lui disant que son compte a été créé.
 
-- Paul se connecte et arrive sur la page d'acceuil.
+- Paul se connecte et arrive sur la page d'accueil.
   Il clique sur un paris dans la colonne avec les match sur lesquels il a parié.
   Il peut le supprime.
   Un message de confirmation s'affiche, il clique sur OUI.
   Un message de validation s'affiche
 
-- Jacques se connecte et arrive sur la page d'acceceuil.
+- Jacques se connecte et arrive sur la page d'accueil.
   Il rentre le nom d'une équipe dans le champ de recherche et les paris disponibles s'affiche.
   Il choisit l'équipe ainsi que la somme de G-Coins à miser.
   UN écran lui demandant s'il est sûr s'affiche.
@@ -79,12 +79,6 @@ GET nomJeux nomLigues nomEquipe date -> Obtenir la liste des paris avec l'equipe
 GET idUtilisateur  -> obtenir le nombre de G-coins de l'utilisateur
 POST idUtilisateur -> obtenir récompense quotidienne
 
--Message
-Get idPari -> obtenir la liste des messages sur un pari
-POST idPari idUtilisateur message -> poster le message sur la pari par l'utilisateur.
-DELETE idMessage idUtilisateur -> permet de détruire le message posté par l'utilisateur.
-
 Base de données
 MySQL -> match, paris, connexion, utilisateur
-MongoDB -> messsage
 
