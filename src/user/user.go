@@ -58,10 +58,6 @@ func AddUser(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func ModifyUser(_ http.ResponseWriter, _ *http.Request) {
-	// TODO
-}
-
 func DeleteUser(res http.ResponseWriter, req *http.Request) {
 	login := req.FormValue("login")
 	password := req.FormValue("password")

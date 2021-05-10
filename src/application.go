@@ -26,8 +26,6 @@ func handleUser(w http.ResponseWriter, r *http.Request) {
 		user.GetUser(w, r)
 	case "POST":
 		user.AddUser(w, r)
-	case "PUT":
-		user.ModifyUser(w, r)
 	case "DELETE":
 		user.DeleteUser(w, r)
 	default:
