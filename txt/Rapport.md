@@ -43,7 +43,7 @@
   Un message s'affiche lui disant qu'il a obtenu une récompense quotidienne de G-Coins.
   Il clique sur le bouton et obtient un montant aléatoire de G-coins en plus dans son inventaire.
 
-##DataBase :
+##Base de donnée :
 - Nous utilisons mysql pour stocker nos 4 bases de données :
     - Utilisateur
     - Match
@@ -67,12 +67,12 @@ Notre serveur utilise une approche ressources, il est composé de 5 servlets :
 - bet : qui permet de gérer les paris
 - coins : qui permet de gérer le compte des utilisateurs
 - connexion : qui permet de se connecter ou de se déconnecter
-- match : qui permet de gérer les matchs : l'ajout, la mise à jour, obtenir la liste des matchs
-- user : qui permet de gérer les utilisateurs : créer un utilisateur, supprimer un utilisateur
+- match : qui permet de gérer les matchs, l'ajout, la mise à jour, obtenir la liste des matchs
+- user : qui permet de gérer les utilisateurs, créer un utilisateur, supprimer un utilisateur
 
-##Description du CLient
+##Description du Client
 Le client est écrit en JavaScript, et est composé d'une seule page avec des listes déroulantes pour avoir accès aux éléments.
-L'accueil est composé de 3 listes déroulantes : une pour obtenir la liste des matchs disponibles, une pour voir les paris effectué,
+L'accueil est composé de 3 listes déroulantes : une pour obtenir la liste des matchs disponibles, une pour voir les paris effectués,
 et une pour voir l'historique des paris.
 Un appel au serveur est effectué à chaque fois que l'utilisateur interagit avec un bouton.
 - Effectuer une recherche : appel au composant match
@@ -93,7 +93,7 @@ La valeur de réponse est un code de réponse HTML : 200,400,403.
 Le message est une description du résultat de la requête.
 Le champ result, il est optionnel s'il n'y a aucun élément nécessaire il n'est pas présent,
 c'est l'endroit où se trouve les éléments de résultats, par exemple si l'on effectue
-la requête sur la liste des matchs alors le champ résultat sera composé des éléments voulue
+la requête sur la liste des matchs alors le champ résultat sera composé des éléments voulue.
 - ###Utilisateur
     - Get id -> obtenir utilisateur
     - POST login mail password -> créer un utilisateur
@@ -155,13 +155,16 @@ Actuellement, nous avons implémenté seulement pour League Of Legends mais il n
 ##Choix de design
 Notre application est très accessible puisque après être inscrit, 
 il est très facile de pouvoir parier, il suffit soit de rechercher un match avec la barre de recherche puis de parier sur une équipe, 
-soit de mettre un pari sur un des matchs disponibles.
+soit de mettre un pari sur un des matchs disponibles. Design minimaliste
 
 ##Choix d'implémentation
 Nous avons choisi d'implémenter notre serveur en Go, puisque nous voulions voir la différence avec le développement de serveur en JAVA.
-Notre client est développé en JavaScript sans aucun ajout.
+Notre client est développé en JavaScript sans bibliothèque externe.
 
 ##Conclusion
 - ###Possibles améliorations
   - Pour améliorer notre application, il faudrait ajouter le support des compétitions d'autres jeux.
   - Nous pourrions aussi modifier la recherche pour ne pas avoir à rechercher des mots complets mais juste des morceaux de mots 
+  - Nous pourrions aussi modifier la recherche pour proposer des matchs qui peuvent intéresser l'utilisateur 
+    en fonction de ces précédents paris.
+  - Nous pourrions utiliser un Cookie pour maintenir la connexion de l'utilisateur
