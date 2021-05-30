@@ -107,7 +107,7 @@ func handleProblem(w http.ResponseWriter, _ *http.Request) {
 	utils.SendResponse(w, http.StatusInternalServerError, `{"message":"problem"}`)
 }
 
-func main() {
+func main1() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "5000"
@@ -120,7 +120,7 @@ func main() {
 	}
 	f, _ := os.Create("/var/log/golang/golang-server.log")
 
-	//log.SetOutput(f)
+	log.SetOutput(f)
 
 	updateComingMatches()
 	updateResultMatchesAndBet()
@@ -144,6 +144,10 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
+}
+
+func main() {
+	match.LoadAllPastMatch()
 }
 
 //list files directory

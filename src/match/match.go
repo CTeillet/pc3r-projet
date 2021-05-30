@@ -79,7 +79,7 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 }
 
 //Ne pas appeler : LoadAllPastMatch
-func _() {
+func LoadAllPastMatch() {
 	req := "https://api.pandascore.co/lol/matches/past?token=4xg85-0CNl9sOdk-tyFooufCsE8qchuK478B5bUoAOV0j3cREdQ"
 
 	resp, _ := http.Get(req + "&page[size]=100")
@@ -180,8 +180,8 @@ func addMulipleMatch(data utils.MatchJSON) {
 }
 
 func addMatch(sport string, league string, equipeA string, equipeB string, statut string, winner string, date time.Time) {
-	cote := calculCote(equipeA, equipeA)
-	//cote := 1
+	//cote := calculCote(equipeA, equipeA)
+	cote := 1
 	db := database.Connect()
 	//fmt.Printf("Update `Match` set equipeA=%v , equipeB=%v , vainqueur=%v , statut=%v where sport=%v and league=%v and equipeA='' and equipeB='' and date=%v ;\n", equipeA, equipeB, winner, statut, sport, league, date)
 	r, err := db.Exec("Update `Match` set equipeA=? , equipeB=? , vainqueur=? , statut=? , cote ? where sport=? and league=? and equipeA='' and equipeB='' and date=? ;", equipeA, equipeB, winner, statut, cote, sport, league, date)
@@ -321,7 +321,7 @@ func nbMatchGagne(equipeA string, equipeB string) int {
 	res := 0
 	err := db.QueryRow("Select Count(*) From  `projet-pc3r`.`Match` where  (equipeA=? or equipeA=?) and (equipeB=? or equipeB=?) and vainqueur=?;", equipeA, equipeB, equipeA, equipeB, equipeA).Scan(&res)
 	if err != nil {
-		//fmt.Println(err.Error())
+		fmt.Println(err.Error())
 		panic(err.Error())
 	}
 	err = db.Close()
