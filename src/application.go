@@ -146,10 +146,6 @@ func main() {
 	}
 }
 
-func maintest() {
-	match.LoadAllPastMatch()
-}
-
 //list files directory
 func _() {
 	var files []string

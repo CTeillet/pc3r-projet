@@ -47,7 +47,7 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 	if req == "" {
 		res, err = db.Query("Select * From `Match` where statut='not_started' and equipeA<>'' and equipeB<>'' order by date;")
 	} else {
-		res, err = db.Query("Select * From `Match` where statut='not_started' and (sport=? or league=? or equipeA=? or equipeB=?) order by date;", req, req, req, req)
+		res, err = db.Query("Select * From `Match` where (sport=? or league=? or equipeA=? or equipeB=?) order by date;", req, req, req, req)
 	}
 
 	if err != nil {
@@ -79,7 +79,7 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 }
 
 //Ne pas appeler : LoadAllPastMatch
-func LoadAllPastMatch() {
+func _() {
 	req := "https://api.pandascore.co/lol/matches/past?token=4xg85-0CNl9sOdk-tyFooufCsE8qchuK478B5bUoAOV0j3cREdQ"
 
 	resp, _ := http.Get(req + "&page[size]=100")
@@ -107,7 +107,7 @@ func LoadAllPastMatch() {
 	if err != nil {
 		panic(err)
 	}
-	//fmt.Println(max)
+	fmt.Println(max)
 	for i := 2; i < max+1; i++ {
 		s := req + "&page[size]=100&page[number]=" + strconv.Itoa(i)
 		//fmt.Println(s)
@@ -180,17 +180,20 @@ func addMulipleMatch(data utils.MatchJSON) {
 }
 
 func addMatch(sport string, league string, equipeA string, equipeB string, statut string, winner string, date time.Time) {
-	cote := calculCote(equipeA, equipeA)
-	//cote := 1
+	//cote := calculCote(equipeA, equipeA)
+	cote := 1
 	db := database.Connect()
 	//fmt.Printf("Update `Match` set equipeA=%v , equipeB=%v , vainqueur=%v , statut=%v where sport=%v and league=%v and equipeA='' and equipeB='' and date=%v ;\n", equipeA, equipeB, winner, statut, sport, league, date)
-	r, err := db.Exec("Update `Match` set equipeA=? , equipeB=? , vainqueur=? , statut=? , cote ? where sport=? and league=? and equipeA='' and equipeB='' and date=? ;", equipeA, equipeB, winner, statut, cote, sport, league, date)
+	r, err := db.Exec("Update `Match` set equipeA=? , equipeB=? , vainqueur=? , statut=? , cote=? where sport=? and league=? and equipeA='' and equipeB='' and date=? ;", equipeA, equipeB, winner, statut, cote, sport, league, date)
+	fmt.Println(err)
 	if err == nil {
+		fmt.Println("1")
 		nbRows, err2 := r.RowsAffected()
 		if err2 != nil || nbRows != 1 {
 			//fmt.Println(err.Error())
 			_, err := db.Exec("Insert into `Match` (sport, league, equipeA, equipeB, cote,statut, vainqueur, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", sport, league, equipeA, equipeB, cote, statut, winner, date)
 			if err != nil {
+
 				if !strings.Contains(err.Error(), "Duplicate") {
 					panic(err.Error())
 				}
@@ -199,6 +202,9 @@ func addMatch(sport string, league string, equipeA string, equipeB string, statu
 		}
 	}
 	err = db.Close()
+	if err != nil {
+		panic(err)
+	}
 }
 
 func LoadResultMatchFor3Hours() {
