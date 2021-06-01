@@ -16,5 +16,12 @@
       <jdbc-url>jdbc:mysql://database-1.cdc5uuou6eov.eu-west-3.rds.amazonaws.com:3306/projet-pc3r?user=admin</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="projet-pc3r.sqlite" uuid="70237185-8a9a-472e-b30d-bd58cdc25ec6">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:projet-pc3r.sqlite</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

@@ -112,7 +112,7 @@ func LoadAllPastMatch() {
 		s := req + "&page[size]=100&page[number]=" + strconv.Itoa(i)
 		//fmt.Println(s)
 		resp, _ := http.Get(s)
-		go JSONMatch2SQL(resp)
+		JSONMatch2SQL(resp)
 	}
 }
 
@@ -180,8 +180,8 @@ func addMulipleMatch(data utils.MatchJSON) {
 }
 
 func addMatch(sport string, league string, equipeA string, equipeB string, statut string, winner string, date time.Time) {
-	//cote := calculCote(equipeA, equipeA)
-	cote := 1
+	cote := calculCote(equipeA, equipeA)
+	//cote := 1
 	db := database.Connect()
 	//fmt.Printf("Update `Match` set equipeA=%v , equipeB=%v , vainqueur=%v , statut=%v where sport=%v and league=%v and equipeA='' and equipeB='' and date=%v ;\n", equipeA, equipeB, winner, statut, sport, league, date)
 	r, err := db.Exec("Update `Match` set equipeA=? , equipeB=? , vainqueur=? , statut=? , cote ? where sport=? and league=? and equipeA='' and equipeB='' and date=? ;", equipeA, equipeB, winner, statut, cote, sport, league, date)

@@ -107,7 +107,7 @@ func handleProblem(w http.ResponseWriter, _ *http.Request) {
 	utils.SendResponse(w, http.StatusInternalServerError, `{"message":"problem"}`)
 }
 
-func main1() {
+func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "5000"
@@ -146,7 +146,7 @@ func main1() {
 	}
 }
 
-func main() {
+func maintest() {
 	match.LoadAllPastMatch()
 }
 
