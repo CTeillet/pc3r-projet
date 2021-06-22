@@ -45,9 +45,9 @@ func GetMatch(w http.ResponseWriter, r *http.Request) {
 	var res *sql.Rows
 	var err error
 	if req == "" {
-		res, err = db.Query("Select * From `Match` where statut='not_started' and equipeA<>'' and equipeB<>'' order by date;")
+		res, err = db.Query("Select * From `Match` where statut='not_started' and equipeA<>'' and equipeB<>'' order by date DESC ;")
 	} else {
-		res, err = db.Query("Select * From `Match` where (sport=? or league=? or equipeA=? or equipeB=?) order by date;", req, req, req, req)
+		res, err = db.Query("Select * From `Match` where (sport=? or league=? or equipeA=? or equipeB=?) order by date DESC;", req, req, req, req)
 	}
 
 	if err != nil {
@@ -122,7 +122,7 @@ func LoadComingMatchFor2Week() {
 	t := time.Now()
 	req += "&range[begin_at]=" + strings.Split(t.Format("2006-01-02T15:04:05-0700"), "+")[0] + "," + strings.Split(t.Add(time.Hour*24*7*2).Format("2006-01-02T15:04:05-0700"), "+")[0]
 	s := req + "&page[size]=100"
-	fmt.Println(s)
+	//fmt.Println(s)
 	resp, _ := http.Get(s)
 	JSONMatch2SQL(resp)
 
@@ -185,9 +185,8 @@ func addMatch(sport string, league string, equipeA string, equipeB string, statu
 	db := database.Connect()
 	//fmt.Printf("Update `Match` set equipeA=%v , equipeB=%v , vainqueur=%v , statut=%v where sport=%v and league=%v and equipeA='' and equipeB='' and date=%v ;\n", equipeA, equipeB, winner, statut, sport, league, date)
 	r, err := db.Exec("Update `Match` set equipeA=? , equipeB=? , vainqueur=? , statut=? , cote=? where sport=? and league=? and equipeA='' and equipeB='' and date=? ;", equipeA, equipeB, winner, statut, cote, sport, league, date)
-	fmt.Println(err)
+	//fmt.Println(err)
 	if err == nil {
-		fmt.Println("1")
 		nbRows, err2 := r.RowsAffected()
 		if err2 != nil || nbRows != 1 {
 			//fmt.Println(err.Error())

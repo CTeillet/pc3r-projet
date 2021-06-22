@@ -5,14 +5,14 @@
     <title>G - Bet</title>
     <link rel="stylesheet" href="css/index.css" type="text/css">
     <link rel="icon" type="image/png" href="img/logo.png"/>
-    <script src="js/index.js"></script>
+    <script type="module" src="js/index.js"></script>
 </head>
 <body>
-<header class="topnav" id="#">
+<header class="topNavigation" id="#">
     <img src="img/logo.png" alt="logo">
     <button class="boutonIdentification" id="loginBtn">Connexion</button>
     <button class="boutonIdentification" id="registerBtn">Inscription</button>
-    <button class="boutonDeconnexion" id="disconnectBtn">Deconnexion</button>
+    <button class="boutonDéconnexion" id="disconnectBtn">Déconnexion</button>
     <label class="montantCompte" id="montantCompte">Montant compte : </label>
     <div class="boutonIdentification">
         <input type="search" id="site-search" name="searchInput"
@@ -70,7 +70,7 @@
     </div>
 
 </header>
-
+<a href="twitchEmbed.html">Autre page</a>
 <div id="main" class="accueil">
     <div id="pariEnCours">
         <button type="button" class="collapsible">Pari en cours</button>
@@ -104,10 +104,10 @@
 </div>
 
 
-<div id="resultSearch" class="resultatRecherche">
-    <h1>Resultat recherche</h1>
-    <button type="button" id="accueil">Retour Acceuil</button>
-    <ol id="resultatRechercheListe">
+<div id="resultSearch" class="searchResult">
+    <h1>Résultat recherche</h1>
+    <button type="button" id="accueil">Retour Accueil</button>
+    <ol id="resultSearchList">
     </ol>
 </div>
 

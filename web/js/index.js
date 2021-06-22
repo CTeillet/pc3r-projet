@@ -9,6 +9,20 @@ let pariEnCoursListe;
 let matchDisponibleListe;
 let matchDisponibleButton;
 
+function majSiIdSession() {
+    if (idSession !== "" && idSession !== null) {
+        sessionStorage.setItem('idSession', idSession);
+        document.getElementById("loginBtn").style.display = "none"
+        document.getElementById("registerBtn").style.display = "none"
+        document.getElementById("disconnectBtn").style.display = "block"
+        document.getElementById("montantCompte").style.display = "block"
+        refreshMatchComing()
+        refreshActiveBet()
+        refreshBetHistory()
+        changeUserMoney()
+    }
+}
+
 window.onload = function () {
     registerModal = document.getElementById("registerModal");
     loginModal = document.getElementById("loginModal");
@@ -20,12 +34,15 @@ window.onload = function () {
     matchDisponibleListe = document.getElementById("matchDisponibleListe")
     matchDisponibleButton = document.getElementById("matchDisponibleButton")
 
+    idSession = sessionStorage.getItem('idSession');
+    console.log("ID SESSION " + idSession)
+    majSiIdSession();
+
     loginForm.addEventListener('submit', function (event) {
         event.preventDefault();
-        window.location.hash="#home"
+        window.location.hash = "#home"
 
         let formData = new FormData(event.target);
-        console.log(formData)
         fetch('/connexion', {
             method: 'POST',
             headers: {
@@ -43,45 +60,35 @@ window.onload = function () {
                     loginModal.style.display = "none";
                     clearLoginForm()
                     idSession = jsonData["idSession"]
-                    if (idSession !== ""){
-                        document.getElementById("loginBtn").style.display="none"
-                        document.getElementById("registerBtn").style.display="none"
-                        document.getElementById("disconnectBtn").style.display="block"
-                        document.getElementById("montantCompte").style.display="block"
-                        refreshMatchComing()
-                        refreshActiveBet()
-                        refreshBetHistory()
-                        changeUserMoney()
-
-                    }
+                    majSiIdSession();
                 }
             });
     })
 
-    document.getElementById("accueil").onclick=function () {
-        window.location.hash="#home"
+    document.getElementById("accueil").onclick = function () {
+        window.location.hash = "#home"
 
-        document.getElementById("main").style.display='block'
-        document.getElementById("resultSearch").style.display='none'
+        document.getElementById("main").style.display = 'block'
+        document.getElementById("resultSearch").style.display = 'none'
     }
 
-    document.getElementById("searchBtn").onclick=function () {
+    document.getElementById("searchBtn").onclick = function () {
         let params = new URLSearchParams()
         params.append("idSession", idSession)
         params.append("req", document.getElementById("site-search").value)
-        fetch("/match?"+params.toString())
+        fetch("/match?" + params.toString())
             .then(res => res.json())
             .then(function (jsonData) {
                 if (jsonData["code"] === "200") {
-                    document.getElementById("resultSearch").style.display="block"
+                    document.getElementById("resultSearch").style.display = "block"
 
-                    document.getElementById("main").style.display='none'
+                    document.getElementById("main").style.display = 'none'
 
-                    const resultatListe = document.getElementById('resultatRechercheListe');
+                    const resultList = document.getElementById('resultSearchList');
 
-                    window.location.hash="#search"
+                    window.location.hash = "#search"
 
-                    resultatListe.innerHTML = ""
+                    resultList.innerHTML = ""
 
 
                     let result = jsonData["result"]
@@ -120,61 +127,81 @@ window.onload = function () {
                         const coteLi = document.createElement('li');
                         coteLi.appendChild(cote)
 
-                        const montant = document.createElement('input');
-                        const montantLi = document.createElement('li');
-                        const montantTxt = document.createTextNode("Montant ");
-                        montantLi.append(montantTxt, montant)
-                        montant.type = 'number'
-                        montant.value = 0
-                        montant.min = 0
+                        let montant;
+                        if (result[i]["vainqueur"] === "") {
+                           montant = document.createElement('input');
+                            const montantLi = document.createElement('li');
+                            const montantTxt = document.createTextNode("Montant ");
+                            montantLi.append(montantTxt, montant)
+                            montant.type = 'number'
+                            montant.value = 0
+                            montant.min = 0
 
-                        const vainqueurLi = document.createElement('li');
+                            const vainqueurLi = document.createElement('li');
 
-                        const equipeARadio = document.createElement('input');
-                        equipeARadio.type = 'radio'
-                        equipeARadio.value = result[i]["equipeA"]
-                        equipeARadio.name = 'vainqueur' + result[i]["id"]
-                        equipeARadio.id = 'equipeA' + result[i]["id"]
+                            const equipeARadio = document.createElement('input');
+                            equipeARadio.type = 'radio'
+                            equipeARadio.value = result[i]["equipeA"]
+                            equipeARadio.name = 'vainqueur' + result[i]["id"]
+                            equipeARadio.id = 'equipeA' + result[i]["id"]
 
-                        const equipeALabel = document.createElement('label');
-                        equipeALabel.htmlFor = 'equipeA' + result[i]["id"]
+                            const equipeALabel = document.createElement('label');
+                            equipeALabel.htmlFor = 'equipeA' + result[i]["id"]
 
-                        const equipeALabelText = document.createTextNode(result[i]["equipeA"]);
+                            const equipeALabelText = document.createTextNode(result[i]["equipeA"]);
 
-                        equipeALabel.appendChild(equipeALabelText)
+                            equipeALabel.appendChild(equipeALabelText)
 
-                        const equipeBRadio = document.createElement('input');
-                        equipeBRadio.type = 'radio'
-                        equipeBRadio.value = result[i]["equipeB"]
-                        equipeBRadio.name = 'vainqueur' + result[i]["id"]
-                        equipeBRadio.id = 'equipeB' + result[i]["id"]
+                            const equipeBRadio = document.createElement('input');
+                            equipeBRadio.type = 'radio'
+                            equipeBRadio.value = result[i]["equipeB"]
+                            equipeBRadio.name = 'vainqueur' + result[i]["id"]
+                            equipeBRadio.id = 'equipeB' + result[i]["id"]
 
-                        const equipeBLabel = document.createElement('label');
-                        equipeBLabel.htmlFor = 'equipeB' + result[i]["id"]
+                            const equipeBLabel = document.createElement('label');
+                            equipeBLabel.htmlFor = 'equipeB' + result[i]["id"]
 
-                        const equipeBLabelText = document.createTextNode(result[i]["equipeB"]);
+                            const equipeBLabelText = document.createTextNode(result[i]["equipeB"]);
 
-                        equipeBLabel.appendChild(equipeBLabelText)
+                            equipeBLabel.appendChild(equipeBLabelText)
 
-                        vainqueurLi.appendChild(equipeARadio)
-                        vainqueurLi.appendChild(equipeALabel)
-                        vainqueurLi.appendChild(equipeBRadio)
-                        vainqueurLi.appendChild(equipeBLabel)
+                            vainqueurLi.appendChild(equipeARadio)
+                            vainqueurLi.appendChild(equipeALabel)
+                            vainqueurLi.appendChild(equipeBRadio)
+                            vainqueurLi.appendChild(equipeBLabel)
 
-                        ul.appendChild(sportLi)
-                        ul.appendChild(leagueLi)
-                        ul.appendChild(dateLi)
-                        ul.appendChild(equipeLi)
-                        ul.appendChild(coteLi)
-                        ul.appendChild(vainqueurLi)
-                        ul.appendChild(montantLi)
+                            ul.appendChild(sportLi)
+                            ul.appendChild(leagueLi)
+                            ul.appendChild(dateLi)
+                            ul.appendChild(equipeLi)
+                            ul.appendChild(coteLi)
+                            ul.appendChild(vainqueurLi)
+                            ul.appendChild(montantLi)
 
-                        form.appendChild(ul)
-                        form.appendChild(submitButton)
+                            form.appendChild(ul)
+                            form.appendChild(submitButton)
+                        } else {
+                            const vainqueurLi = document.createElement('li');
+                            const vainqueurLabelText = document.createTextNode("Vainqueur : " + result[i]["vainqueur"]);
+
+                            vainqueurLi.appendChild(vainqueurLabelText)
+
+                            ul.appendChild(sportLi)
+                            ul.appendChild(leagueLi)
+                            ul.appendChild(dateLi)
+                            ul.appendChild(equipeLi)
+                            ul.appendChild(coteLi)
+                            ul.appendChild(vainqueurLi)
+
+                            form.appendChild(ul)
+                            // form.appendChild(submitButton)
+                        }
+
+
 
                         li.appendChild(form)
 
-                        resultatListe.append(li)
+                        resultList.append(li)
 
                         submitButton.onclick = function (event) {
                             event.preventDefault()
@@ -182,8 +209,8 @@ window.onload = function () {
                             let vainqueur = document.querySelector('input[name="vainqueur' + idMatch + '"]:checked').value;
                             if (montant.value !== 0 && vainqueur !== "") {
                                 params = new URLSearchParams()
-                                console.log("Montant : " + montant.value)
-                                console.log("Cote : " + result[i]["cote"])
+/*                                console.log("Montant : " + montant.value)
+                                console.log("Cote : " + result[i]["cote"])*/
                                 params.append("idSession", idSession)
                                 params.append("idMatch", idMatch)
                                 params.append("equipeGagnante", vainqueur)
@@ -199,7 +226,7 @@ window.onload = function () {
                                     body: params
                                 })
                                     .then(function (response) {
-                                        console.log(response)
+                                        // console.log(response)
                                         return response.json()
                                     })
                                     .then(function (jsonData) {
@@ -214,28 +241,29 @@ window.onload = function () {
 
     }
 
-    document.getElementById("disconnectBtn").onclick=function () {
+    document.getElementById("disconnectBtn").onclick = function () {
+        console.log("Déconnexion")
         let params = new URLSearchParams()
         params.append("idSession", idSession)
-        fetch("/connexion?"+params.toString(), {
-            method:'DELETE',
+        fetch("/connexion?" + params.toString(), {
+            method: 'DELETE',
         })
             .then(res => res.json())
             .then(function (jsonData) {
 
-                if(jsonData["code"]==="200"){
+                if (jsonData["code"] === "200") {
                     alert(jsonData["message"])
-                    document.getElementById("loginBtn").style.display="block"
-                    document.getElementById("registerBtn").style.display="block"
-                    document.getElementById("disconnectBtn").style.display="none"
-                    document.getElementById("montantCompte").style.display="none"
+                    document.getElementById("loginBtn").style.display = "block"
+                    document.getElementById("registerBtn").style.display = "block"
+                    document.getElementById("disconnectBtn").style.display = "none"
+                    document.getElementById("montantCompte").style.display = "none"
                     clearChamp('pariEnCoursListe')
                     clearChamp('matchDisponibleListe')
                     clearChamp('pariFinisListe')
                 }
             })
     }
-    
+
     registerForm.addEventListener('submit', function (event) {
         event.preventDefault();
         let formData = new FormData(event.target);
@@ -252,16 +280,14 @@ window.onload = function () {
                 return response.json();
             })
             .then(function (jsonData) {
-                console.log(jsonData);
+                // console.log(jsonData);
                 window.alert(jsonData["message"])
             });
     })
 
 
-
     collapse()
-    
-    
+
 
     loginBtn.onclick = function () {
         loginModal.style.display = "block";
@@ -287,7 +313,7 @@ function refreshMatchComing() {
 
     let params = new URLSearchParams()
     params.append("idSession", idSession)
-    console.log(params.toString())
+    // console.log(params.toString())
     fetch("/match?" + params.toString())
         .then(function (response) {
             return response.json();
@@ -298,11 +324,11 @@ function refreshMatchComing() {
                 let result = jsonData["result"];
                 for (let i = 0; i < result.length; i++) {
                     const form = document.createElement('form')
-                    form.name=result[i]["id"]
+                    form.name = result[i]["id"]
 
                     const submitButton = document.createElement('button')
 
-                    submitButton.type="submit"
+                    submitButton.type = "submit"
 
                     submitButton.appendChild(document.createTextNode("Soumettre Pari"))
 
@@ -327,13 +353,13 @@ function refreshMatchComing() {
                     equipeLi.appendChild(equipe)
 
                     let coteA = result[i]["cote"]
-                    let coteB = 100/coteA
+                    let coteB = 100 / coteA
 
-                    const cotePourA = document.createTextNode("Cote pour l'équipe " + result[i]["equipeA"]+" : " + coteA);
+                    const cotePourA = document.createTextNode("Cote pour l'équipe " + result[i]["equipeA"] + " : " + coteA);
                     const coteLiA = document.createElement('li');
                     coteLiA.appendChild(cotePourA)
 
-                    const cotePourB = document.createTextNode("Cote pour l'équipe " + result[i]["equipeB"]+" : " + coteB);
+                    const cotePourB = document.createTextNode("Cote pour l'équipe " + result[i]["equipeB"] + " : " + coteB);
                     const coteLiB = document.createElement('li');
                     coteLiB.appendChild(cotePourB)
 
@@ -341,33 +367,33 @@ function refreshMatchComing() {
                     const montantLi = document.createElement('li');
                     const montantTxt = document.createTextNode("Montant ");
                     montantLi.append(montantTxt, montant)
-                    montant.type= 'number'
-                    montant.value=0
-                    montant.min=0
+                    montant.type = 'number'
+                    montant.value = 0
+                    montant.min = 0
 
                     const vainqueurLi = document.createElement('li');
 
                     const equipeARadio = document.createElement('input');
-                    equipeARadio.type='radio'
-                    equipeARadio.value=result[i]["equipeA"]
-                    equipeARadio.name='vainqueur'+result[i]["id"]
-                    equipeARadio.id='equipeA'+result[i]["id"]
+                    equipeARadio.type = 'radio'
+                    equipeARadio.value = result[i]["equipeA"]
+                    equipeARadio.name = 'vainqueur' + result[i]["id"]
+                    equipeARadio.id = 'equipeA' + result[i]["id"]
 
                     const equipeALabel = document.createElement('label');
-                    equipeALabel.htmlFor='equipeA'+result[i]["id"]
+                    equipeALabel.htmlFor = 'equipeA' + result[i]["id"]
 
                     const equipeALabelText = document.createTextNode(result[i]["equipeA"]);
 
                     equipeALabel.appendChild(equipeALabelText)
 
                     const equipeBRadio = document.createElement('input');
-                    equipeBRadio.type='radio'
-                    equipeBRadio.value=result[i]["equipeB"]
-                    equipeBRadio.name='vainqueur'+result[i]["id"]
-                    equipeBRadio.id='equipeB'+result[i]["id"]
+                    equipeBRadio.type = 'radio'
+                    equipeBRadio.value = result[i]["equipeB"]
+                    equipeBRadio.name = 'vainqueur' + result[i]["id"]
+                    equipeBRadio.id = 'equipeB' + result[i]["id"]
 
                     const equipeBLabel = document.createElement('label');
-                    equipeBLabel.htmlFor='equipeB'+result[i]["id"]
+                    equipeBLabel.htmlFor = 'equipeB' + result[i]["id"]
 
                     const equipeBLabelText = document.createTextNode(result[i]["equipeB"]);
 
@@ -394,14 +420,14 @@ function refreshMatchComing() {
 
                     matchDisponibleListe.append(li)
 
-                    submitButton.onclick=function (event){
+                    submitButton.onclick = function (event) {
                         event.preventDefault()
                         let idMatch = event.target.form.name
-                        let vainqueur = document.querySelector('input[name="vainqueur'+idMatch+'"]:checked').value;
-                        if (montant.value!==0 && vainqueur!=="" ){
+                        let vainqueur = document.querySelector('input[name="vainqueur' + idMatch + '"]:checked').value;
+                        if (montant.value !== 0 && vainqueur !== "") {
                             params = new URLSearchParams()
-                            console.log("Montant : " + montant.value)
-                            console.log("Cote : " + result[i]["cote"])
+                            // console.log("Montant : " + montant.value)
+                            // console.log("Cote : " + result[i]["cote"])
                             params.append("idSession", idSession)
                             params.append("idMatch", idMatch)
                             params.append("equipeGagnante", vainqueur)
@@ -417,7 +443,7 @@ function refreshMatchComing() {
                                 body: params
                             })
                                 .then(function (response) {
-                                    console.log(response)
+                                    // console.log(response)
                                     return response.json()
                                 })
                                 .then(function (jsonData) {
@@ -426,7 +452,7 @@ function refreshMatchComing() {
                         }
                     }
                 }
-            }else{
+            } else {
                 alert(jsonData["message"])
             }
         });
@@ -438,7 +464,7 @@ function refreshActiveBet() {
 }
 
 function refreshBetHistory() {
-    getBet("","pariFinisListe")
+    getBet("", "pariFinisListe")
 }
 
 function getBet(statut, champ) {
@@ -476,7 +502,7 @@ function getBet(statut, champ) {
 
                     document.getElementById(champ).append(li)
                 }
-            }else{
+            } else {
                 alert(jsonData["message"])
             }
         })
@@ -496,7 +522,7 @@ function clearMatchAVenir() {
     document.getElementById("matchDisponibleListe").innerHTML = "";
 }
 
-function clearChamp(champ){
+function clearChamp(champ) {
     document.getElementById(champ).innerHTML = "";
 }
 
@@ -505,19 +531,19 @@ function collapse() {
     let i;
 
     for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function() {
+        coll[i].addEventListener("click", function () {
             this.classList.toggle("active");
             const content = this.nextElementSibling;
             if (content.style.display === "block") {
-            content.style.display = "none";
+                content.style.display = "none";
             } else {
-            content.style.display = "block";
+                content.style.display = "block";
             }
         });
     }
 }
 
-function changeUserMoney(){
+function changeUserMoney() {
     let params = new URLSearchParams()
     params.append("idSession", idSession)
     fetch("/user?" + params.toString())
@@ -525,12 +551,12 @@ function changeUserMoney(){
         )
         .then(function (jsonData) {
             let cagnotte = Number.parseFloat(jsonData["cagnotte"]).toFixed(2)
-            document.getElementById("montantCompte").innerText="Montant compte : " + cagnotte
+            document.getElementById("montantCompte").innerText = "Montant compte : " + cagnotte
         })
 }
 
-window.onpopstate = function() {
-    switch(location.hash) {
+window.onpopstate = function () {
+    switch ( location.hash ) {
         case '#home':
             backFromHome()
             break
@@ -538,16 +564,16 @@ window.onpopstate = function() {
             backFromSearch()
             break
         default:
-            // defaultBackAnimation()
+        // defaultBackAnimation()
     }
 }
 
 function backFromHome() {
-    document.getElementById("main").style.display="block"
-    document.getElementById("resultSearch").style.display="none"
+    document.getElementById("main").style.display = "block"
+    document.getElementById("resultSearch").style.display = "none"
 }
 
 function backFromSearch() {
-    document.getElementById("main").style.display="none"
-    document.getElementById("resultSearch").style.display="block"
+    document.getElementById("main").style.display = "none"
+    document.getElementById("resultSearch").style.display = "block"
 }
